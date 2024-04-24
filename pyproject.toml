@@ -1,0 +1,89 @@
+[tool.poetry]
+name = "funcy-typing"
+version = "2.0.0"
+description = "Stubs for funcy package"
+authors = ["Ratschew Fedor <feodor.ra@me.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [
+    { include = "funcy-stubs"}
+]
+keywords = [
+    "funcy",
+    "types",
+    "typing",
+    "stubs",
+]
+repository = "https://github.com/feodor-ra/funcy-stubs"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Typing :: Stubs Only",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[tool.poetry.dependencies]
+python = "^3.8.0"
+typing-extensions = "^4.11"
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.4.0"
+funcy = "^2.0"
+poetry = "^1.8.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+include = [
+    "funcy-stubs/**/*.py",
+    "funcy-stubs/**/*.pyi"
+]
+line-length = 88
+indent-width = 4
+target-version = "py38"
+
+[tool.ruff.lint]
+select = [
+    "I",
+    "F",
+    "E",
+    "W",
+    "Q",
+    "TID",
+    "UP",
+    "C4",
+    "RET",
+    "PLC",
+    "PLE",
+    "PLR",
+    "PLW",
+    "ANN",
+    "COM",
+    "PYI",
+    "RUF"
+]
+ignore = [
+    "PLR0913",
+    "ANN101",
+    "ANN401",
+    "COM812"
+]
+fixable = ["ALL"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
