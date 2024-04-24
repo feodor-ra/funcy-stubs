@@ -1,0 +1,49 @@
+from collections.abc import Iterable, Iterator, Mapping, Sequence
+from typing import Any, Callable, Hashable, overload
+
+from typing_extensions import TypeAliasType, TypeGuard
+
+from ._types import T1, T2, T3, T4, T5, T
+
+_C = TypeAliasType("_C", Callable[[Any], TypeGuard[T]], type_params=(T,))
+
+@overload
+def isa(t1: type[T1], /) -> _C[T1]: ...
+@overload
+def isa(t1: type[T1], t2: type[T2], /) -> _C[T1 | T2]: ...
+@overload
+def isa(t1: type[T1], t2: type[T2], t3: type[T3], /) -> _C[T1 | T2 | T3]: ...
+@overload
+def isa(
+    t1: type[T1], t2: type[T2], t3: type[T3], t4: type[T4], /
+) -> _C[T1 | T2 | T3 | T4]: ...
+@overload
+def isa(
+    t1: type[T1], t2: type[T2], t3: type[T3], t4: type[T4], t5: type[T5], /
+) -> _C[T1 | T2 | T3 | T4 | T5]: ...
+@overload
+def isa(*types: type) -> Callable[[Any], bool]: ...
+def is_mapping(x: Any) -> TypeGuard[Mapping[Hashable, Any]]: ...
+def is_set(x: Any) -> TypeGuard[set[Hashable]]: ...
+def is_seq(x: Any) -> TypeGuard[Sequence[Any]]: ...
+def is_list(x: Any) -> TypeGuard[list[Any]]: ...
+def is_tuple(x: Any) -> TypeGuard[tuple[Any, ...]]: ...
+def is_seqcoll(x: Any) -> TypeGuard[list[Any] | tuple[Any, ...]]: ...
+def is_seqcont(
+    x: Any,
+) -> TypeGuard[list[Any] | tuple[Any, ...] | Iterator[Any] | range]: ...
+def iterable(x: Any) -> TypeGuard[Iterable[Any]]: ...
+def is_iter(x: Any) -> TypeGuard[Iterator[Any]]: ...
+
+__all__ = (
+    "isa",
+    "is_mapping",
+    "is_set",
+    "is_seq",
+    "is_list",
+    "is_tuple",
+    "is_seqcoll",
+    "is_seqcont",
+    "iterable",
+    "is_iter",
+)
