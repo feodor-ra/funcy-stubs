@@ -4,7 +4,7 @@ Type stubs for [funcy](https://pypi.org/project/funcy/) package
 
 Support all funcy modules:
 
-- cal
+- calc
 - colls
 - debug
 - decorators
