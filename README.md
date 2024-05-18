@@ -10,6 +10,7 @@ Support all funcy modules:
 - decorators
 - flow
 - funcmakers
+- funcools
 - funcs
 - objects
 - primitives
