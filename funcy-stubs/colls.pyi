@@ -212,7 +212,7 @@ def zip_dicts(
 @overload
 def get_in(
     coll: GetCollectionProtocol[T],
-    path: Iterable[SupportsIndex],
+    path: Iterable[int | Hashable],
     default: S | None = None,
 ) -> T | S | None: ...
 @overload
@@ -224,7 +224,7 @@ def get_in(
 @overload
 def get_lax(
     coll: GetCollectionProtocol[T],
-    path: Iterable[SupportsIndex],
+    path: Iterable[int | Hashable],
     default: S | None = None,
 ) -> T | S | None: ...
 @overload
@@ -236,7 +236,7 @@ def get_lax(
 @overload
 def set_in(
     coll: SetCollectionProtocol[T],
-    path: Iterable[SupportsIndex],
+    path: Iterable[int | Hashable],
     value: T,
 ) -> SetCollectionProtocol[T]: ...
 @overload
@@ -248,7 +248,7 @@ def set_in(
 @overload
 def update_in(
     coll: SetCollectionProtocol[T],
-    path: Iterable[SupportsIndex],
+    path: Iterable[int | Hashable],
     update: Callable[[SetCollectionProtocol[T]], Any],
     default: T | None = None,
 ) -> SetCollectionProtocol[T]: ...
@@ -259,19 +259,13 @@ def update_in(
     update: Callable[[SetCollectionProtocol[T]], Any],
     default: T | None = None,
 ) -> Mapping[KT, T]: ...
-@overload
 def del_in(
     coll: _DelCollectionType,
-    path: Iterable[SupportsIndex],
-) -> _DelCollectionType: ...
-@overload
-def del_in(
-    coll: _DelCollectionType,
-    path: Iterable[Hashable],
+    path: Iterable[int | Hashable],
 ) -> _DelCollectionType: ...
 @overload
 def has_path(
-    coll: GetCollectionProtocol[Any], path: Iterable[SupportsIndex]
+    coll: GetCollectionProtocol[Any], path: Iterable[int | Hashable]
 ) -> bool: ...
 @overload
 def has_path(coll: Mapping[KT, Any], path: Iterable[KT]) -> bool: ...
