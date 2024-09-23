@@ -34,9 +34,9 @@ class ValuesProtocol(Protocol[T_co]):
     @abstractmethod
     def values(self) -> T_co: ...
 
-class GetCollectionProtocol(Protocol[T_co]):
+class GetCollectionProtocol(Protocol[T_co, T_contra]):
     @abstractmethod
-    def __getitem__(self, i: SupportsIndex, /) -> T_co: ...
+    def __getitem__(self, i: T_contra, /) -> T_co: ...
 
 class SetCollectionProtocol(Protocol[T_contra]):
     @abstractmethod
@@ -211,28 +211,28 @@ def zip_dicts(
 ) -> Iterable[tuple[KT, tuple[VT, ...]]]: ...
 @overload
 def get_in(
-    coll: GetCollectionProtocol[T],
-    path: Iterable[int | Hashable],
-    default: S | None = None,
-) -> T | S | None: ...
+    coll: GetCollectionProtocol[T, T1],
+    path: Iterable[T1],
+    default: S = None,
+) -> T | S: ...
 @overload
 def get_in(
     coll: Mapping[KT, VT],
     path: Iterable[KT],
-    default: S | None,
-) -> KT | S | None: ...
+    default: S = None,
+) -> KT | S: ...
 @overload
 def get_lax(
-    coll: GetCollectionProtocol[T],
-    path: Iterable[int | Hashable],
-    default: S | None = None,
-) -> T | S | None: ...
+    coll: GetCollectionProtocol[T, T1],
+    path: Iterable[T1],
+    default: S = None,
+) -> T | S: ...
 @overload
 def get_lax(
     coll: Mapping[KT, VT],
     path: Iterable[KT],
-    default: S | None,
-) -> VT | S | None: ...
+    default: S = None,
+) -> VT | S: ...
 @overload
 def set_in(
     coll: SetCollectionProtocol[T],
@@ -264,9 +264,7 @@ def del_in(
     path: Iterable[int | Hashable],
 ) -> _DelCollectionType: ...
 @overload
-def has_path(
-    coll: GetCollectionProtocol[Any], path: Iterable[int | Hashable]
-) -> bool: ...
+def has_path(coll: GetCollectionProtocol[Any, T], path: Iterable[T]) -> bool: ...
 @overload
 def has_path(coll: Mapping[KT, Any], path: Iterable[KT]) -> bool: ...
 def where(

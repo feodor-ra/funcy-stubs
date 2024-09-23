@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "funcy-typing"
-version = "2.0.3"
+version = "2.0.4"
 description = "Stubs for funcy package"
 authors = ["Ratschew Fedor <feodor.ra@me.com>"]
 license = "MIT"
