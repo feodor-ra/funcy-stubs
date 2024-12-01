@@ -53,13 +53,13 @@ def cut_prefix(s: AnyStr, prefix: AnyStr) -> AnyStr: ...
 def cut_suffix(s: AnyStr, prefix: AnyStr) -> AnyStr: ...
 
 __all__ = (
-    "re_iter",
+    "cut_prefix",
+    "cut_suffix",
     "re_all",
     "re_find",
     "re_finder",
+    "re_iter",
     "re_test",
     "re_tester",
     "str_join",
-    "cut_prefix",
-    "cut_suffix",
 )

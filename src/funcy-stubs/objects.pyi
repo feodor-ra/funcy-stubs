@@ -12,7 +12,7 @@ from ._types import P, S, T
 
 _Prop = TypeVar("_Prop", bound=property)
 
-class cached_property(Generic[T, S], property):
+class cached_property(property, Generic[T, S]):
     fset: Any = None
     fdel: Any = None
 
@@ -31,4 +31,4 @@ def monkey(
 class LazyObject:
     def __init__(self, init: Any) -> None: ...
 
-__all__ = ("cached_property", "cached_readonly", "wrap_prop", "monkey", "LazyObject")
+__all__ = ("LazyObject", "cached_property", "cached_readonly", "monkey", "wrap_prop")
