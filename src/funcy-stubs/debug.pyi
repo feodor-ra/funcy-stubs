@@ -140,17 +140,17 @@ def print_iter_durations(
 ) -> Iterable[T]: ...
 
 __all__ = (
-    "tap",
     "log_calls",
-    "print_calls",
-    "log_enters",
-    "print_enters",
-    "log_exits",
-    "print_exits",
-    "log_errors",
-    "print_errors",
     "log_durations",
-    "print_durations",
+    "log_enters",
+    "log_errors",
+    "log_exits",
     "log_iter_durations",
+    "print_calls",
+    "print_durations",
+    "print_enters",
+    "print_errors",
+    "print_exits",
     "print_iter_durations",
+    "tap",
 )

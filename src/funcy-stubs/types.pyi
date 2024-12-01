@@ -36,14 +36,14 @@ def iterable(x: Any) -> TypeGuard[Iterable[Any]]: ...
 def is_iter(x: Any) -> TypeGuard[Iterator[Any]]: ...
 
 __all__ = (
-    "isa",
-    "is_mapping",
-    "is_set",
-    "is_seq",
+    "is_iter",
     "is_list",
-    "is_tuple",
+    "is_mapping",
+    "is_seq",
     "is_seqcoll",
     "is_seqcont",
+    "is_set",
+    "is_tuple",
+    "isa",
     "iterable",
-    "is_iter",
 )
