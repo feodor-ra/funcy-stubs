@@ -280,16 +280,10 @@ def lpluck(key: KT, mappings: Iterable[Mapping[KT, VT]]) -> list[VT]: ...
 def pluck_attr(attr: str, objects: Iterable[object]) -> Iterable[Any]: ...
 def lpluck_attr(attr: str, objects: Iterable[object]) -> list[Any]: ...
 def invoke(
-    objects: Iterable[object],
-    name: str,
-    *args: Any,
-    **kwargs: dict[str, Any],
+    objects: Iterable[object], name: str, *args: Any, **kwargs: Any
 ) -> Iterable[Any]: ...
 def linvoke(
-    objects: Iterable[object],
-    name: str,
-    *args: Any,
-    **kwargs: dict[str, Any],
+    objects: Iterable[object], name: str, *args: Any, **kwargs: Any
 ) -> list[Any]: ...
 
 __all__ = (
