@@ -1,6 +1,6 @@
 [project]
 name = "funcy-typing"
-version = "2.0.5"
+version = "2.0.6"
 description = "Stubs for funcy package"
 readme = "README.md"
 license = "MIT"
