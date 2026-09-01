@@ -78,7 +78,7 @@ from .flow import (
     wrap_with,
 )
 from .funcmakers import make_func, make_pred
-from .funcools import all_fn, any_fn, none_fn, one_fn, some_fn
+from .funcolls import all_fn, any_fn, none_fn, one_fn, some_fn
 from .funcs import (
     autocurry,
     caller,

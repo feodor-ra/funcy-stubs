@@ -447,7 +447,7 @@ def interleave(
     iter4: Iterable[T4],
     iter5: Iterable[T5],
     /,
-    *iterables: T,
+    *iterables: Iterable[T],
 ) -> Iterable[T1 | T2 | T3 | T4 | T5 | T]: ...
 def interpose(sep: T1, seq: Iterable[T2]) -> Iterable[T1 | T2]: ...
 @overload
