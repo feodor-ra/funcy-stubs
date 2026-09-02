@@ -21,21 +21,26 @@ Support all funcy modules:
 
 All functions that use `make_func` and `make_pred` are written for all cases of their use via @overload
 
+[![CI](https://img.shields.io/github/actions/workflow/status/feodor-ra/funcy-stubs/ci.yml?branch=master&label=CI)](https://github.com/feodor-ra/funcy-stubs/actions/workflows/ci.yml)
+[![PyPI - Version](https://img.shields.io/pypi/v/funcy-typing)](https://pypi.org/project/funcy-typing/)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/funcy-typing)
 ![PyPI - Status](https://img.shields.io/pypi/status/funcy-typing)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/funcy-typing)
 ![PyPI - Format](https://img.shields.io/pypi/format/funcy-typing)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/funcy-typing)
+[![PEP 561 - Stubs Only](https://img.shields.io/badge/PEP%20561-stubs--only-blue)](https://peps.python.org/pep-0561/)
 
 [![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/feodor-ra/funcy-stubs/blob/master/.pre-commit-config.yaml)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Checked with pyright](https://microsoft.github.io/pyright/img/pyright_badge.svg)](https://microsoft.github.io/pyright/)
+[![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
+[![ty](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ty/main/assets/badge/v0.json)](https://github.com/astral-sh/ty)
 [![Semantic Versions](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--versions-e10079.svg)](https://github.com/feodor-ra/funcy-stubs/releases)
 
 ![GitHub License](https://img.shields.io/github/license/feodor-ra/funcy-stubs)
 ![GitHub Release](https://img.shields.io/github/v/release/feodor-ra/funcy-stubs)
-![GitHub Repo stars](<https://img.shields.io/github/stars/feodor-ra/funcy-stubs>)
+![GitHub Repo stars](https://img.shields.io/github/stars/feodor-ra/funcy-stubs)
 
 ## Install
 
@@ -43,4 +48,10 @@ All functions that use `make_func` and `make_pred` are written for all cases of 
 
 ```bash
 pip install funcy-typing
+```
+
+or with [uv](https://docs.astral.sh/uv/):
+
+```bash
+uv add funcy-typing
 ```
