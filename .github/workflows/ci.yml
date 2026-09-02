@@ -1,0 +1,85 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: ["master"]
+  workflow_call:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: "Lint"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - name: Install dependencies
+        run: uv sync --frozen
+      - name: Check lockfile
+        run: uv lock --check
+      - name: Ruff lint
+        run: uv run ruff check --output-format=github
+      - name: Ruff format
+        run: uv run ruff format --check
+
+  typecheck:
+    name: "Typecheck (${{ matrix.python }})"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - name: Install dependencies
+        run: uv sync --frozen
+      - name: Pyright
+        run: uv run pyright --pythonversion ${{ matrix.python }}
+      # mypy >=2.3 cannot target below 3.10; those versions are covered by pyright
+      - name: Mypy
+        if: ${{ matrix.python != '3.8' && matrix.python != '3.9' }}
+        run: uv run mypy --python-version ${{ matrix.python }}
+      # ty targets the configured floor (3.8), one run is enough
+      - name: Ty
+        if: ${{ matrix.python == '3.8' }}
+        run: uv run ty check
+
+  stubtest:
+    name: "Stubtest"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - name: Install dependencies
+        run: uv sync --frozen
+      - name: Stubtest
+        run: MYPYPATH=src uv run python -m mypy.stubtest funcy --allowlist stubtest-allowlist.txt
+
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - name: Build
+        run: uv build
