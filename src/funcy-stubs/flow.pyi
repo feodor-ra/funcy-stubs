@@ -13,9 +13,9 @@ from typing import (
     overload,
 )
 
-from funcy.flow import ErrorRateExceeded
-
 from ._types import D, P, S, SupportsString, T, T_co
+
+class ErrorRateExceeded(Exception): ...  # ruff: ignore[error-suffix-on-exception-name]
 
 class ExceptionProtocol(Protocol[P]):
     def __new__(cls) -> BaseException: ...
