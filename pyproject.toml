@@ -49,26 +49,19 @@ target-version = "py38"
 fix = true
 
 [tool.ruff.lint]
-select = [
-    "I",
-    "F",
-    "E",
-    "W",
-    "Q",
-    "TID",
-    "UP",
-    "C4",
-    "RET",
-    "PLC",
-    "PLE",
-    "PLR",
-    "PLW",
-    "ANN",
-    "COM",
-    "PYI",
-    "RUF",
+select = ["ALL"]
+ignore = [
+    "A001",   # funcy deliberately shadows builtins (all, any, map, filter, zip, ...)
+    "A004",   # re-exporting those shadowed names is the point of the stubs
+    "ANN401", # Any is unavoidable when typing funcy's dynamic helpers
+    "COM812", # conflicts with the formatter
+    "CPY001", # no per-file copyright notices in this project
+    "D100",   # stub-only package, no docstrings
+    "D203",   # incompatible with D211 (formatter-aligned choice)
+    "D213",   # incompatible with D212 (formatter-aligned choice)
+    "INP001", # src/funcy-stubs is a PEP 561 stubs dir, not an importable package
+    "N801",   # class names mirror funcy runtime (cached_property, ...)
 ]
-ignore = ["PLR0913", "ANN401", "COM812"]
 preview = true
 
 [tool.ruff.format]
