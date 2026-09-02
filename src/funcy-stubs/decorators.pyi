@@ -12,4 +12,4 @@ def decorator(
     deco: Callable[..., Any],
 ) -> Callable[[Callable[_P, _T]], Callable[_P, _T]]: ...
 
-__all__ = ("ContextDecorator", "contextmanager", "decorator", "unwrap", "wraps")
+__all__ = ["ContextDecorator", "contextmanager", "decorator", "unwrap", "wraps"]

@@ -37,9 +37,9 @@ _MatchType = TypeAliasType(
     type_params=(AnyStr,),
 )
 
-class SupportsAdd(Protocol[_T_contra]):
+class _SupportsAdd(Protocol[_T_contra]):
     @abstractmethod
-    def __add__(self, value: _T_contra, /) -> SupportsAdd[_T_contra]: ...
+    def __add__(self, value: _T_contra, /) -> _SupportsAdd[_T_contra]: ...
 
 @overload
 def repeatedly(f: Callable[[], _T], /) -> Iterable[_T]: ...
@@ -838,10 +838,10 @@ def reductions(
 def lreductions(f: Callable[[_S, _T], _S], seq: Iterable[_T]) -> list[_S]: ...
 @overload
 def lreductions(f: Callable[[_S, _T], _S], seq: Iterable[_T], acc: _S) -> list[_S]: ...
-def sums(seq: Iterable[SupportsAdd[_T]], acc: _T = ...) -> Iterable[_T]: ...
-def lsums(seq: Iterable[SupportsAdd[_T]], acc: _T = ...) -> list[_T]: ...
+def sums(seq: Iterable[_SupportsAdd[_T]], acc: _T = ...) -> Iterable[_T]: ...
+def lsums(seq: Iterable[_SupportsAdd[_T]], acc: _T = ...) -> list[_T]: ...
 
-__all__ = (
+__all__ = [
     "accumulate",
     "butlast",
     "cat",
@@ -907,4 +907,4 @@ __all__ = (
     "with_next",
     "with_prev",
     "without",
-)
+]

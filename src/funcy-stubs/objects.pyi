@@ -33,10 +33,10 @@ class cached_readonly(cached_property[_T, _S]):
 def wrap_prop(ctx: ContextManager[Any]) -> Callable[[_Prop], _Prop]: ...
 def monkey(
     cls: type | ModuleType,
-    name: str = ...,
+    name: str | None = None,
 ) -> Callable[[Callable[_P, _T]], Callable[_P, _T]]: ...
 
 class LazyObject:
     def __init__(self, init: Any) -> None: ...
 
-__all__ = ("LazyObject", "cached_property", "cached_readonly", "monkey", "wrap_prop")
+__all__ = ["LazyObject", "cached_property", "cached_readonly", "monkey", "wrap_prop"]

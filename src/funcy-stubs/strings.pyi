@@ -22,46 +22,46 @@ _MatchType = typing_extensions.TypeAliasType(
     type_params=(AnyStr,),
 )
 
-FlagsType: typing_extensions.TypeAlias = int | RegexFlag
+_FlagsType: typing_extensions.TypeAlias = int | RegexFlag
 
-class SupportsString(Protocol):
+class _SupportsString(Protocol):
     @abstractmethod
     def __str__(self) -> str: ...
 
 def re_iter(
     regex: _RegexType[AnyStr],
     s: str,
-    flags: FlagsType = 0,
+    flags: _FlagsType = 0,
 ) -> Iterable[_MatchType[AnyStr]]: ...
 def re_all(
     regex: _RegexType[AnyStr],
     s: str,
-    flags: FlagsType = 0,
+    flags: _FlagsType = 0,
 ) -> list[_MatchType[AnyStr]]: ...
 def re_find(
     regex: _RegexType[AnyStr],
     s: str,
-    flags: FlagsType = 0,
+    flags: _FlagsType = 0,
 ) -> _MatchType[AnyStr] | None: ...
-def re_test(regex: _RegexType[AnyStr], s: str, flags: FlagsType = 0) -> bool: ...
+def re_test(regex: _RegexType[AnyStr], s: str, flags: _FlagsType = 0) -> bool: ...
 def re_finder(
     regex: _RegexType[AnyStr],
-    flags: FlagsType = 0,
+    flags: _FlagsType = 0,
 ) -> Callable[[str], _MatchType[AnyStr] | None]: ...
 def re_tester(
     regex: _RegexType[AnyStr],
-    flags: FlagsType = 0,
+    flags: _FlagsType = 0,
 ) -> Callable[[str], bool]: ...
 @overload
-def str_join(seq: Iterable[SupportsString | str], /) -> str: ...
+def str_join(seq: Iterable[_SupportsString | str], /) -> str: ...
 @overload
-def str_join(sep: str, seq: Iterable[SupportsString | str]) -> str: ...
+def str_join(sep: str, seq: Iterable[_SupportsString | str]) -> str: ...
 @overload
 def str_join(sep: bytes, seq: Iterable[SupportsBytes | bytes]) -> bytes: ...
 def cut_prefix(s: AnyStr, prefix: AnyStr) -> AnyStr: ...
 def cut_suffix(s: AnyStr, suffix: AnyStr) -> AnyStr: ...
 
-__all__ = (
+__all__ = [
     "cut_prefix",
     "cut_suffix",
     "re_all",
@@ -71,4 +71,4 @@ __all__ = (
     "re_test",
     "re_tester",
     "str_join",
-)
+]

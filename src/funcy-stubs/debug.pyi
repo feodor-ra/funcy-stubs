@@ -7,13 +7,13 @@ from typing_extensions import ParamSpec, Self, TypeAlias
 _P = ParamSpec("_P")
 _T = TypeVar("_T")
 
-PrintFunc: TypeAlias = Callable[[str], Any]
-Unit: TypeAlias = Literal["auto", "ns", "mks", "ms", "s"]
-_PrintFuncType = TypeVar("_PrintFuncType", bound=PrintFunc)
+_PrintFunc: TypeAlias = Callable[[str], Any]
+_Unit: TypeAlias = Literal["auto", "ns", "mks", "ms", "s"]
+_PrintFuncType = TypeVar("_PrintFuncType", bound=_PrintFunc)
 
 def tap(x: _T, label: str | None = None) -> _T: ...
 def log_calls(
-    print_func: PrintFunc,
+    print_func: _PrintFunc,
     errors: bool = True,
     stack: bool = True,
     repr_len: int = ...,
@@ -27,7 +27,7 @@ def print_calls(
 @overload
 def print_calls(func: Callable[_P, _T]) -> Callable[_P, _T]: ...
 def log_enters(
-    print_func: PrintFunc,
+    print_func: _PrintFunc,
     repr_len: int = ...,
 ) -> Callable[[Callable[_P, _T]], Callable[_P, _T]]: ...
 @overload
@@ -37,7 +37,7 @@ def print_enters(
 @overload
 def print_enters(func: Callable[_P, _T]) -> Callable[_P, _T]: ...
 def log_exits(
-    print_func: PrintFunc,
+    print_func: _PrintFunc,
     errors: bool = True,
     stack: bool = True,
     repr_len: int = ...,
@@ -63,10 +63,21 @@ class LabeledContextDecorator(Generic[_PrintFuncType]):
         repr_len: int = ...,
     ) -> None: ...
     @overload
-    def __call__(self, label: Callable[_P, _T], /) -> Callable[_P, _T]: ...
+    def __call__(self, label: Callable[_P, _T]) -> Callable[_P, _T]: ...
     @overload
-    def __call__(self, label: str | None = None, /, **kwargs: Any) -> Self: ...
+    def __call__(self, label: str | None = None, **kwargs: Any) -> Self: ...
     def decorator(self, func: Callable[_P, _T]) -> Callable[_P, _T]: ...
+
+class log_errors(LabeledContextDecorator[_PrintFuncType]):
+    stack: bool
+
+    def __init__(
+        self,
+        print_func: _PrintFuncType,
+        label: str | None = None,
+        stack: bool = True,
+        repr_len: int = ...,
+    ) -> None: ...
     def __enter__(self) -> Self: ...
     @overload
     def __exit__(
@@ -83,18 +94,7 @@ class LabeledContextDecorator(Generic[_PrintFuncType]):
         exc_tb: TracebackType,
     ) -> None: ...
 
-class log_errors(LabeledContextDecorator[_PrintFuncType]):
-    stack: bool
-
-    def __init__(
-        self,
-        print_func: _PrintFuncType,
-        label: str | None = None,
-        stack: bool = True,
-        repr_len: int = ...,
-    ) -> None: ...
-
-print_errors: log_errors[PrintFunc]
+print_errors: log_errors[_PrintFunc]
 
 class log_durations(LabeledContextDecorator[_PrintFuncType]):
     format_time: Callable[[float], str]
@@ -105,26 +105,41 @@ class log_durations(LabeledContextDecorator[_PrintFuncType]):
         self,
         print_func: _PrintFuncType,
         label: str | None = None,
-        unit: Unit = "auto",
+        unit: _Unit = "auto",
         threshold: float = -1,
         repr_len: int = ...,
     ) -> None: ...
+    def __enter__(self) -> Self: ...
+    @overload
+    def __exit__(
+        self,
+        exc_type: None,
+        exc_value: None,
+        exc_tb: None,
+    ) -> None: ...
+    @overload
+    def __exit__(
+        self,
+        exc_type: type[BaseException],
+        exc_value: BaseException,
+        exc_tb: TracebackType,
+    ) -> None: ...
 
-print_durations: log_durations[PrintFunc]
+print_durations: log_durations[_PrintFunc]
 
 def log_iter_durations(
     seq: Iterable[_T],
-    print_func: PrintFunc,
+    print_func: _PrintFunc,
     label: str | None = None,
-    unit: Unit = "auto",
+    unit: _Unit = "auto",
 ) -> Iterable[_T]: ...
 def print_iter_durations(
     seq: Iterable[_T],
     label: str | None = None,
-    unit: Unit = "auto",
+    unit: _Unit = "auto",
 ) -> Iterable[_T]: ...
 
-__all__ = (
+__all__ = [
     "log_calls",
     "log_durations",
     "log_enters",
@@ -138,4 +153,4 @@ __all__ = (
     "print_exits",
     "print_iter_durations",
     "tap",
-)
+]

@@ -14,7 +14,7 @@ from typing import (
     overload,
 )
 
-from typing_extensions import ParamSpec, TypeAlias, TypeAliasType
+from typing_extensions import ParamSpec, TypeAliasType
 
 _P = ParamSpec("_P")
 _T = TypeVar("_T")
@@ -54,22 +54,30 @@ def caller(
     *args: _P.args,  # type: ignore[valid-type]  # ty: ignore[unbound-type-variable]
     **kwargs: _P.kwargs,  # type: ignore[valid-type]
 ) -> Callable[[Callable[_P, _T]], _T]: ...
+def func_partial(
+    func: Callable[..., _T],
+    *args: Any,
+    **kwargs: Any,
+) -> Callable[..., _T]: ...
+def rpartial(
+    func: Callable[..., _T],
+    *args: Any,
+    **kwargs: Any,
+) -> Callable[..., _T]: ...
 
-func_partial: TypeAlias = partial[Any]  # ruff: ignore[snake-case-type-alias]
+class _CurryCallable(Protocol[_T_co]):
+    def __call__(self, arg: Any, /) -> _T_co | _CurryCallable[_T_co]: ...
 
-rpartial: TypeAlias = partial[Any]  # ruff: ignore[snake-case-type-alias]
+class _AutoCurryCallable(Protocol[_T_co]):
+    def __call__(
+        self, *args: Any, **kwds: Any
+    ) -> _T_co | _AutoCurryCallable[_T_co]: ...
 
-class CurryCallable(Protocol[_T_co]):
-    def __call__(self, arg: Any, /) -> _T_co | CurryCallable[_T_co]: ...
+def curry(func: Callable[..., _T], n: int = ...) -> _CurryCallable[_T]: ...
+def rcurry(func: Callable[..., _T], n: int = ...) -> _CurryCallable[_T]: ...
+def autocurry(func: Callable[..., _T], n: int = ..., /) -> _AutoCurryCallable[_T]: ...
 
-class AutoCurryCallable(Protocol[_T_co]):
-    def __call__(self, *args: Any, **kwds: Any) -> _T_co | AutoCurryCallable[_T_co]: ...
-
-def curry(func: Callable[..., _T], n: int = ...) -> CurryCallable[_T]: ...
-def rcurry(func: Callable[..., _T], n: int = ...) -> CurryCallable[_T]: ...
-def autocurry(func: Callable[..., _T], n: int = ..., /) -> AutoCurryCallable[_T]: ...
-
-Default = TypeAliasType("Default", Callable[[_T], _D] | _D, type_params=(_T, _D))
+_Default = TypeAliasType("_Default", Callable[[_T], _D] | _D, type_params=(_T, _D))
 
 @overload
 def iffy(
@@ -81,7 +89,7 @@ def iffy(
     action: Callable[[_B], _S],
     /,
     *,
-    default: Default[_B, _D],
+    default: _Default[_B, _D],
 ) -> Callable[[_B], _S | _D]: ...
 @overload
 def iffy(
@@ -93,7 +101,7 @@ def iffy(
 def iffy(
     pred: Callable[[_T], _Boolean[_B]],
     action: Callable[[_T], _S],
-    default: Default[_T, _D],
+    default: _Default[_T, _D],
 ) -> Callable[[_T], _S | _D]: ...
 @overload
 def iffy(
@@ -105,7 +113,7 @@ def iffy(
 def iffy(
     pred: None,
     action: Callable[[_B], _S],
-    default: Default[_B, _D],
+    default: _Default[_B, _D],
 ) -> Callable[[_B], _S | _D]: ...
 @overload
 def iffy(
@@ -117,7 +125,7 @@ def iffy(
 def iffy(
     pred: _RegexType[AnyStr],
     action: Callable[[str], _S],
-    default: Default[str, _D],
+    default: _Default[str, _D],
 ) -> Callable[[str], _S | _D]: ...
 @overload
 def iffy(
@@ -129,7 +137,7 @@ def iffy(
 def iffy(
     pred: int,
     action: Callable[[Sequence[_B]], _B],
-    default: Default[Sequence[_B], _D],
+    default: _Default[Sequence[_B], _D],
 ) -> Callable[[Sequence[_B]], _B | _D]: ...
 @overload
 def iffy(
@@ -141,7 +149,7 @@ def iffy(
 def iffy(
     pred: Mapping[_KT, _VT],
     action: Callable[[_KT], _S],
-    default: Default[_KT, _D],
+    default: _Default[_KT, _D],
 ) -> Callable[[_KT], _S | _D]: ...
 @overload
 def iffy(
@@ -153,7 +161,7 @@ def iffy(
 def iffy(
     pred: set[_H],
     action: Callable[[_H], _S],
-    default: Default[_H, _D],
+    default: _Default[_H, _D],
 ) -> Callable[[_H], _S | _D]: ...
 @overload
 def compose() -> Callable[[_T], _T]: ...
@@ -284,7 +292,7 @@ def juxt(*fs: Mapping[_KT, _VT]) -> Callable[[_KT], Iterable[_VT]]: ...
 @overload
 def juxt(*fs: set[_H]) -> Callable[[_H], Iterable[bool]]: ...
 
-__all__ = (
+__all__ = [
     "autocurry",
     "caller",
     "complement",
@@ -300,4 +308,4 @@ __all__ = (
     "rcompose",
     "rcurry",
     "rpartial",
-)
+]

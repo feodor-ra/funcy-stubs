@@ -42,31 +42,31 @@ _Boolean = TypeAliasType("_Boolean", bool | _B, type_params=(_B,))
 _Coll = TypeVar("_Coll", bound=Iterable[Any])
 _KT1 = TypeVar("_KT1", bound=Hashable)
 
-class ItemsProtocol(Protocol[_T_co]):
+class _ItemsProtocol(Protocol[_T_co]):
     @abstractmethod
     def items(self) -> _T_co: ...
 
-class ValuesProtocol(Protocol[_T_co]):
+class _ValuesProtocol(Protocol[_T_co]):
     @abstractmethod
     def values(self) -> _T_co: ...
 
-class GetCollectionProtocol(Protocol[_T_co, _T_contra]):
+class _GetCollectionProtocol(Protocol[_T_co, _T_contra]):
     @abstractmethod
     def __getitem__(self, i: _T_contra, /) -> _T_co: ...
 
-class SetCollectionProtocol(Protocol[_T_contra]):
+class _SetCollectionProtocol(Protocol[_T_contra]):
     @abstractmethod
     def __setitem__(self, key: SupportsIndex, value: _T_contra, /) -> None: ...
     @abstractmethod
     def __getitem__(self, i: SupportsIndex, /) -> Any: ...
 
-class DelCollectionProtocol(Protocol):
+class _DelCollectionProtocol(Protocol):
     @abstractmethod
     def __delitem__(self, key: SupportsIndex, /) -> None: ...
     @abstractmethod
     def __getitem__(self, i: SupportsIndex, /) -> Any: ...
 
-_DelCollectionType = TypeVar("_DelCollectionType", bound=DelCollectionProtocol)
+_DelCollectionType = TypeVar("_DelCollectionType", bound=_DelCollectionProtocol)
 
 @overload
 def empty(coll: Iterator[_T]) -> Iterator[_T]: ...
@@ -79,11 +79,11 @@ def empty(coll: ItemsView[_KT, _VT]) -> list[tuple[_KT, _VT]]: ...
 @overload
 def empty(coll: _Coll) -> _Coll: ...
 @overload
-def iteritems(coll: ItemsProtocol[_T]) -> _T: ...
+def iteritems(coll: _ItemsProtocol[_T]) -> _T: ...
 @overload
 def iteritems(coll: _T) -> _T: ...
 @overload
-def itervalues(coll: ValuesProtocol[_T]) -> _T: ...
+def itervalues(coll: _ValuesProtocol[_T]) -> _T: ...
 @overload
 def itervalues(coll: _T) -> _T: ...
 @overload
@@ -233,13 +233,13 @@ def zip_values(*dicts: Mapping[Any, _VT]) -> Iterable[tuple[_VT, ...]]: ...
 def zip_dicts(*dicts: Mapping[_KT, _VT]) -> Iterable[tuple[_KT, tuple[_VT, ...]]]: ...
 @overload
 def get_in(
-    coll: GetCollectionProtocol[_T, _T1],
+    coll: _GetCollectionProtocol[_T, _T1],
     path: Iterable[_T1],
     default: None = None,
 ) -> _T | None: ...
 @overload
 def get_in(
-    coll: GetCollectionProtocol[_T, _T1],
+    coll: _GetCollectionProtocol[_T, _T1],
     path: Iterable[_T1],
     default: _S,
 ) -> _T | _S: ...
@@ -257,13 +257,13 @@ def get_in(
 ) -> _VT | _S: ...
 @overload
 def get_lax(
-    coll: GetCollectionProtocol[_T, _T1],
+    coll: _GetCollectionProtocol[_T, _T1],
     path: Iterable[_T1],
     default: None = None,
 ) -> _T | None: ...
 @overload
 def get_lax(
-    coll: GetCollectionProtocol[_T, _T1],
+    coll: _GetCollectionProtocol[_T, _T1],
     path: Iterable[_T1],
     default: _S,
 ) -> _T | _S: ...
@@ -281,10 +281,10 @@ def get_lax(
 ) -> _VT | _S: ...
 @overload
 def set_in(
-    coll: SetCollectionProtocol[_T],
+    coll: _SetCollectionProtocol[_T],
     path: Iterable[int | Hashable],
     value: _T,
-) -> SetCollectionProtocol[_T]: ...
+) -> _SetCollectionProtocol[_T]: ...
 @overload
 def set_in(
     coll: MutableMapping[_KT, _VT],
@@ -293,16 +293,16 @@ def set_in(
 ) -> Mapping[_KT, _T]: ...
 @overload
 def update_in(
-    coll: SetCollectionProtocol[_T],
+    coll: _SetCollectionProtocol[_T],
     path: Iterable[int | Hashable],
-    update: Callable[[SetCollectionProtocol[_T]], Any],
+    update: Callable[[_SetCollectionProtocol[_T]], Any],
     default: _T | None = None,
-) -> SetCollectionProtocol[_T]: ...
+) -> _SetCollectionProtocol[_T]: ...
 @overload
 def update_in(
     coll: MutableMapping[_KT, _VT],
     path: Iterable[_KT],
-    update: Callable[[SetCollectionProtocol[_T]], Any],
+    update: Callable[[_SetCollectionProtocol[_T]], Any],
     default: _T | None = None,
 ) -> Mapping[_KT, _T]: ...
 def del_in(
@@ -310,7 +310,7 @@ def del_in(
     path: Iterable[int | Hashable],
 ) -> _DelCollectionType: ...
 @overload
-def has_path(coll: GetCollectionProtocol[Any, _T], path: Iterable[_T]) -> bool: ...
+def has_path(coll: _GetCollectionProtocol[Any, _T], path: Iterable[_T]) -> bool: ...
 @overload
 def has_path(coll: Mapping[_KT, Any], path: Iterable[_KT]) -> bool: ...
 def where(
@@ -332,7 +332,7 @@ def linvoke(
     objects: Iterable[object], name: str, *args: Any, **kwargs: Any
 ) -> list[Any]: ...
 
-__all__ = (
+__all__ = [
     "all",
     "any",
     "compact",
@@ -373,4 +373,4 @@ __all__ = (
     "zip_dicts",
     "zip_values",
     "zipdict",
-)
+]
