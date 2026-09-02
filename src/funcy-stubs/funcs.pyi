@@ -28,8 +28,8 @@ from ._types import (
 def identity(x: T) -> T: ...
 def constantly(x: T) -> Callable[..., T]: ...
 def caller(
-    *args: P.args,  # type: ignore[reportGeneralTypeIssues]
-    **kwargs: P.kwargs,
+    *args: P.args,  # type: ignore[valid-type]  # ty: ignore[unbound-type-variable]
+    **kwargs: P.kwargs,  # type: ignore[valid-type]
 ) -> Callable[[Callable[P, T]], T]: ...
 
 func_partial: TypeAlias = partial[Any]  # ruff: ignore[snake-case-type-alias]

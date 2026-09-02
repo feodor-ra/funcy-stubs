@@ -12,3 +12,7 @@ repos:
     rev: v1.1.411
     hooks:
       - id: pyright
+  - repo: https://github.com/astral-sh/ty-pre-commit
+    rev: v0.0.77
+    hooks:
+      - id: ty

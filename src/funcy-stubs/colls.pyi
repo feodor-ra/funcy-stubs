@@ -119,7 +119,7 @@ def walk_keys(
     coll: tuple[tuple[T, VT], ...],
 ) -> tuple[tuple[S, VT], ...]: ...
 @overload
-def walk_keys(f: Callable[[KT], _KT1], coll: dict[KT, VT]) -> dict[_KT1, VT]: ...
+def walk_keys(f: Callable[[KT], _KT1], coll: dict[KT, VT]) -> dict[_KT1, VT]: ...  # type: ignore[overload-overlap]
 @overload
 def walk_keys(
     f: Callable[[KT], _KT1],
@@ -138,7 +138,7 @@ def walk_values(
     coll: tuple[tuple[KT, T], ...],
 ) -> tuple[tuple[KT, S], ...]: ...
 @overload
-def walk_values(f: Callable[[VT], S], coll: dict[KT, VT]) -> dict[KT, S]: ...
+def walk_values(f: Callable[[VT], S], coll: dict[KT, VT]) -> dict[KT, S]: ...  # type: ignore[overload-overlap]
 @overload
 def walk_values(
     f: Callable[[T2], S],

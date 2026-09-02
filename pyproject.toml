@@ -25,7 +25,13 @@ requires-python = ">=3.8"
 dependencies = ["funcy~=2.0", "typing-extensions>=4.11"]
 
 [dependency-groups]
-dev = ["pre-commit==4.6.2", "pyright[nodejs]==1.1.411", "ruff==0.16.5"]
+dev = [
+    "mypy==2.3.1",
+    "pre-commit==4.6.2",
+    "pyright[nodejs]==1.1.411",
+    "ruff==0.16.5",
+    "ty==0.0.77",
+]
 
 [tool.uv.dependency-groups]
 dev = { requires-python = ">=3.13" }
@@ -74,3 +80,16 @@ preview = true
 [tool.pyright]
 include = ["src/funcy-stubs/"]
 typeCheckingMode = "strict"
+pythonVersion = "3.8"
+
+[tool.mypy]
+files = ["src/funcy-stubs"]
+strict = true
+# mypy >=2.3 only targets 3.10+; 3.8/3.9 remain covered by pyright
+python_version = "3.10"
+
+[tool.ty.environment]
+python-version = "3.8"
+
+[tool.ty.src]
+include = ["src/funcy-stubs"]
