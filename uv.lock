@@ -114,8 +114,6 @@ version = "2.0.8"
 source = { editable = "." }
 dependencies = [
     { name = "funcy" },
-    { name = "typing-extensions", version = "4.12.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.15'" },
-    { name = "typing-extensions", version = "4.16.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.15'" },
 ]
 
 [package.dev-dependencies]
@@ -128,10 +126,7 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [
-    { name = "funcy", specifier = "~=2.0" },
-    { name = "typing-extensions", specifier = ">=4.11" },
-]
+requires-dist = [{ name = "funcy", specifier = "~=2.0" }]
 
 [package.metadata.requires-dev]
 dev = [
@@ -565,8 +560,6 @@ version = "4.12.2"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
     "python_full_version >= '3.13' and python_full_version < '3.15'",
-    "python_full_version >= '3.9' and python_full_version < '3.13'",
-    "python_full_version < '3.9'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/df/db/f35a00659bc03fec321ba8bce9420de607a1d37f8342eee1863174c69557/typing_extensions-4.12.2.tar.gz", hash = "sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8", size = 85321, upload-time = "2024-06-07T18:52:15.995Z" }
 wheels = [
