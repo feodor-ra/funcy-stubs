@@ -209,25 +209,49 @@ def zip_dicts(*dicts: Mapping[KT, VT]) -> Iterable[tuple[KT, tuple[VT, ...]]]: .
 def get_in(
     coll: GetCollectionProtocol[T, T1],
     path: Iterable[T1],
-    default: S = None,
+    default: None = None,
+) -> T | None: ...
+@overload
+def get_in(
+    coll: GetCollectionProtocol[T, T1],
+    path: Iterable[T1],
+    default: S,
 ) -> T | S: ...
 @overload
 def get_in(
     coll: Mapping[KT, VT],
     path: Iterable[KT],
-    default: S = None,
+    default: None = None,
+) -> VT | None: ...
+@overload
+def get_in(
+    coll: Mapping[KT, VT],
+    path: Iterable[KT],
+    default: S,
 ) -> VT | S: ...
 @overload
 def get_lax(
     coll: GetCollectionProtocol[T, T1],
     path: Iterable[T1],
-    default: S = None,
+    default: None = None,
+) -> T | None: ...
+@overload
+def get_lax(
+    coll: GetCollectionProtocol[T, T1],
+    path: Iterable[T1],
+    default: S,
 ) -> T | S: ...
 @overload
 def get_lax(
     coll: Mapping[KT, VT],
     path: Iterable[KT],
-    default: S = None,
+    default: None = None,
+) -> VT | None: ...
+@overload
+def get_lax(
+    coll: Mapping[KT, VT],
+    path: Iterable[KT],
+    default: S,
 ) -> VT | S: ...
 @overload
 def set_in(

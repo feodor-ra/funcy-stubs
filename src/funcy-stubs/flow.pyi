@@ -47,9 +47,15 @@ def raiser(
     *args: P.args,
     **kwargs: P.kwargs,
 ) -> Callable[..., NoReturn]: ...
+@overload
 def ignore(
     errors: Iterable[type[Exception]] | type[Exception],
-    default: D = None,
+    default: None = None,
+) -> Callable[[Callable[P, T]], Callable[P, T | None]]: ...
+@overload
+def ignore(
+    errors: Iterable[type[Exception]] | type[Exception],
+    default: D,
 ) -> Callable[[Callable[P, T]], Callable[P, T | D]]: ...
 def silent(func: Callable[P, T]) -> Callable[P, T]: ...
 
