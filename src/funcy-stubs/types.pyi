@@ -1,26 +1,31 @@
 from collections.abc import Iterable, Iterator, Mapping, Sequence
-from typing import Any, Callable, Hashable, overload
+from typing import Any, Callable, Hashable, TypeVar, overload
 
 from typing_extensions import TypeAliasType, TypeGuard
 
-from ._types import T1, T2, T3, T4, T5, T
+_T = TypeVar("_T")
+_T1 = TypeVar("_T1")
+_T2 = TypeVar("_T2")
+_T3 = TypeVar("_T3")
+_T4 = TypeVar("_T4")
+_T5 = TypeVar("_T5")
 
-_C = TypeAliasType("_C", Callable[[Any], TypeGuard[T]], type_params=(T,))
+_C = TypeAliasType("_C", Callable[[Any], TypeGuard[_T]], type_params=(_T,))
 
 @overload
-def isa(t1: type[T1], /) -> _C[T1]: ...
+def isa(t1: type[_T1], /) -> _C[_T1]: ...
 @overload
-def isa(t1: type[T1], t2: type[T2], /) -> _C[T1 | T2]: ...
+def isa(t1: type[_T1], t2: type[_T2], /) -> _C[_T1 | _T2]: ...
 @overload
-def isa(t1: type[T1], t2: type[T2], t3: type[T3], /) -> _C[T1 | T2 | T3]: ...
+def isa(t1: type[_T1], t2: type[_T2], t3: type[_T3], /) -> _C[_T1 | _T2 | _T3]: ...
 @overload
 def isa(
-    t1: type[T1], t2: type[T2], t3: type[T3], t4: type[T4], /
-) -> _C[T1 | T2 | T3 | T4]: ...
+    t1: type[_T1], t2: type[_T2], t3: type[_T3], t4: type[_T4], /
+) -> _C[_T1 | _T2 | _T3 | _T4]: ...
 @overload
 def isa(
-    t1: type[T1], t2: type[T2], t3: type[T3], t4: type[T4], t5: type[T5], /
-) -> _C[T1 | T2 | T3 | T4 | T5]: ...
+    t1: type[_T1], t2: type[_T2], t3: type[_T3], t4: type[_T4], t5: type[_T5], /
+) -> _C[_T1 | _T2 | _T3 | _T4 | _T5]: ...
 @overload
 def isa(*types: type) -> Callable[[Any], bool]: ...
 def is_mapping(x: Any) -> TypeGuard[Mapping[Hashable, Any]]: ...

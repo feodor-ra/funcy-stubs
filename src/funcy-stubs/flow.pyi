@@ -1,3 +1,4 @@
+from abc import abstractmethod
 from collections.abc import Iterable
 from contextlib import nullcontext, suppress
 from datetime import datetime, timedelta
@@ -10,54 +11,65 @@ from typing import (
     NoReturn,
     Protocol,
     SupportsBytes,
+    TypeVar,
     overload,
 )
 
-from ._types import D, P, S, SupportsString, T, T_co
+from typing_extensions import ParamSpec
+
+_P = ParamSpec("_P")
+_T = TypeVar("_T")
+_T_co = TypeVar("_T_co", covariant=True)
+_S = TypeVar("_S")
+_D = TypeVar("_D")
+
+class _SupportsString(Protocol):
+    @abstractmethod
+    def __str__(self) -> str: ...
 
 class ErrorRateExceeded(Exception): ...  # ruff: ignore[error-suffix-on-exception-name]
 
-class ExceptionProtocol(Protocol[P]):
+class ExceptionProtocol(Protocol[_P]):
     def __new__(cls) -> BaseException: ...
-    def __init__(self, *args: P.args, **kwargs: P.kwargs) -> None: ...
+    def __init__(self, *args: _P.args, **kwargs: _P.kwargs) -> None: ...
 
-class LimitRateCallableProtocol(Protocol[P, T_co]):
+class LimitRateCallableProtocol(Protocol[_P, _T_co]):
     fails: int
     blocked: datetime | None
 
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T_co: ...
+    def __call__(self, *args: _P.args, **kwargs: _P.kwargs) -> _T_co: ...
 
-class ThrottleCallableProtocol(Protocol[P, T_co]):
+class ThrottleCallableProtocol(Protocol[_P, _T_co]):
     blocked_until: datetime | None
 
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T_co: ...
+    def __call__(self, *args: _P.args, **kwargs: _P.kwargs) -> _T_co: ...
 
-class OncePerCallableProtocol(Protocol[P, T]):
+class OncePerCallableProtocol(Protocol[_P, _T]):
     lock: Lock
-    done_set: set[T]
-    done_list: list[T]
+    done_set: set[_T]
+    done_list: list[_T]
 
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T: ...
+    def __call__(self, *args: _P.args, **kwargs: _P.kwargs) -> _T: ...
 
 @overload
 def raiser(exception_or_class: str) -> Callable[..., NoReturn]: ...
 @overload
 def raiser(
-    exception_or_class: type[ExceptionProtocol[P]],
-    *args: P.args,
-    **kwargs: P.kwargs,
+    exception_or_class: type[ExceptionProtocol[_P]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[..., NoReturn]: ...
 @overload
 def ignore(
     errors: Iterable[type[Exception]] | type[Exception],
     default: None = None,
-) -> Callable[[Callable[P, T]], Callable[P, T | None]]: ...
+) -> Callable[[Callable[_P, _T]], Callable[_P, _T | None]]: ...
 @overload
 def ignore(
     errors: Iterable[type[Exception]] | type[Exception],
-    default: D,
-) -> Callable[[Callable[P, T]], Callable[P, T | D]]: ...
-def silent(func: Callable[P, T]) -> Callable[P, T]: ...
+    default: _D,
+) -> Callable[[Callable[_P, _T]], Callable[_P, _T | _D]]: ...
+def silent(func: Callable[_P, _T]) -> Callable[_P, _T]: ...
 
 class reraise:
     def __init__(
@@ -78,39 +90,39 @@ def retry(
     errors: Iterable[type[Exception]] | type[Exception] = ...,
     timeout: int | Callable[[int], int] = 0,
     filter_errors: Callable[[Exception], bool] | None = None,
-) -> Callable[[Callable[P, T]], Callable[P, T]]: ...
+) -> Callable[[Callable[_P, _T]], Callable[_P, _T]]: ...
 def fallback(
-    *approaches: Callable[[], T]
-    | tuple[Callable[[], T], type[Exception] | Iterable[type[Exception]]],
-) -> T | None: ...
+    *approaches: Callable[[], _T]
+    | tuple[Callable[[], _T], type[Exception] | Iterable[type[Exception]]],
+) -> _T | None: ...
 def limit_error_rate(
     fails: int,
     timeout: timedelta | int,
     exception: Exception = ...,
-) -> Callable[[Callable[P, T]], LimitRateCallableProtocol[P, T]]: ...
+) -> Callable[[Callable[_P, _T]], LimitRateCallableProtocol[_P, _T]]: ...
 def throttle(
     period: float | timedelta,
-) -> Callable[[Callable[P, T]], ThrottleCallableProtocol[P, T]]: ...
+) -> Callable[[Callable[_P, _T]], ThrottleCallableProtocol[_P, _T]]: ...
 def post_processing(
-    func: Callable[[T], S],
-) -> Callable[[Callable[P, T]], Callable[P, S]]: ...
-def collecting(func: Callable[P, Iterable[T]]) -> Callable[P, list[T]]: ...
+    func: Callable[[_T], _S],
+) -> Callable[[Callable[_P, _T]], Callable[_P, _S]]: ...
+def collecting(func: Callable[_P, Iterable[_T]]) -> Callable[_P, list[_T]]: ...
 @overload
 def joining(
     sep: str,
-) -> Callable[[Callable[P, Iterable[SupportsString]]], Callable[P, str]]: ...
+) -> Callable[[Callable[_P, Iterable[_SupportsString]]], Callable[_P, str]]: ...
 @overload
 def joining(
     sep: bytes,
-) -> Callable[[Callable[P, Iterable[SupportsBytes]]], Callable[P, bytes]]: ...
+) -> Callable[[Callable[_P, Iterable[SupportsBytes]]], Callable[_P, bytes]]: ...
 def once_per(
     *argnames: str,
-) -> Callable[[Callable[P, T]], OncePerCallableProtocol[P, T]]: ...
-def once(func: Callable[P, T]) -> OncePerCallableProtocol[P, T]: ...
-def once_per_args(func: Callable[P, T]) -> OncePerCallableProtocol[P, T]: ...
+) -> Callable[[Callable[_P, _T]], OncePerCallableProtocol[_P, _T]]: ...
+def once(func: Callable[_P, _T]) -> OncePerCallableProtocol[_P, _T]: ...
+def once_per_args(func: Callable[_P, _T]) -> OncePerCallableProtocol[_P, _T]: ...
 def wrap_with(
     ctx: ContextManager[Any],
-) -> Callable[[Callable[P, T]], Callable[P, T]]: ...
+) -> Callable[[Callable[_P, _T]], Callable[_P, _T]]: ...
 
 __all__ = (
     "ErrorRateExceeded",

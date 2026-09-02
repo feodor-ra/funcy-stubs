@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from collections.abc import Iterable
-from re import RegexFlag
+from re import Pattern, RegexFlag
 from typing import (
     AnyStr,
     Callable,
@@ -11,7 +11,16 @@ from typing import (
 
 import typing_extensions
 
-from ._types import MatchType, RegexType
+_RegexType = typing_extensions.TypeAliasType(
+    "_RegexType",
+    AnyStr | Pattern[AnyStr],
+    type_params=(AnyStr,),
+)
+_MatchType = typing_extensions.TypeAliasType(
+    "_MatchType",
+    AnyStr | tuple[AnyStr, ...] | dict[str, AnyStr],
+    type_params=(AnyStr,),
+)
 
 FlagsType: typing_extensions.TypeAlias = int | RegexFlag
 
@@ -20,27 +29,27 @@ class SupportsString(Protocol):
     def __str__(self) -> str: ...
 
 def re_iter(
-    regex: RegexType[AnyStr],
+    regex: _RegexType[AnyStr],
     s: str,
     flags: FlagsType = 0,
-) -> Iterable[MatchType[AnyStr]]: ...
+) -> Iterable[_MatchType[AnyStr]]: ...
 def re_all(
-    regex: RegexType[AnyStr],
+    regex: _RegexType[AnyStr],
     s: str,
     flags: FlagsType = 0,
-) -> list[MatchType[AnyStr]]: ...
+) -> list[_MatchType[AnyStr]]: ...
 def re_find(
-    regex: RegexType[AnyStr],
+    regex: _RegexType[AnyStr],
     s: str,
     flags: FlagsType = 0,
-) -> MatchType[AnyStr] | None: ...
-def re_test(regex: RegexType[AnyStr], s: str, flags: FlagsType = 0) -> bool: ...
+) -> _MatchType[AnyStr] | None: ...
+def re_test(regex: _RegexType[AnyStr], s: str, flags: FlagsType = 0) -> bool: ...
 def re_finder(
-    regex: RegexType[AnyStr],
+    regex: _RegexType[AnyStr],
     flags: FlagsType = 0,
-) -> Callable[[str], MatchType[AnyStr] | None]: ...
+) -> Callable[[str], _MatchType[AnyStr] | None]: ...
 def re_tester(
-    regex: RegexType[AnyStr],
+    regex: _RegexType[AnyStr],
     flags: FlagsType = 0,
 ) -> Callable[[str], bool]: ...
 @overload

@@ -1,5 +1,4 @@
 funcy.__all__
-funcy._types
 funcy.calc.MemoizeProtocol
 funcy.calc.__all__
 funcy.calc.memoize

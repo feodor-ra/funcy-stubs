@@ -1,261 +1,288 @@
+from abc import abstractmethod
 from collections.abc import Mapping, Sequence
 from functools import partial
 from functools import reduce as reduce
-from typing import Any, AnyStr, Callable, Iterable, Protocol, overload
-
-from typing_extensions import TypeAlias, TypeAliasType
-
-from ._types import (
-    KT,
-    T1,
-    T2,
-    T3,
-    T4,
-    T5,
-    VT,
-    B,
-    Boolean,
-    D,
-    H,
-    MatchType,
-    P,
-    RegexType,
-    S,
-    T,
-    T_co,
+from re import Pattern
+from typing import (
+    Any,
+    AnyStr,
+    Callable,
+    Hashable,
+    Iterable,
+    Protocol,
+    TypeVar,
+    overload,
 )
 
-def identity(x: T) -> T: ...
-def constantly(x: T) -> Callable[..., T]: ...
+from typing_extensions import ParamSpec, TypeAlias, TypeAliasType
+
+_P = ParamSpec("_P")
+_T = TypeVar("_T")
+_T1 = TypeVar("_T1")
+_T2 = TypeVar("_T2")
+_T3 = TypeVar("_T3")
+_T4 = TypeVar("_T4")
+_T5 = TypeVar("_T5")
+_S = TypeVar("_S")
+_D = TypeVar("_D")
+_KT = TypeVar("_KT", bound=Hashable)
+_VT = TypeVar("_VT")
+_H = TypeVar("_H", bound=Hashable)
+_T_co = TypeVar("_T_co", covariant=True)
+
+class _SupportsBool(Protocol):
+    @abstractmethod
+    def __bool__(self) -> bool: ...
+
+_B = TypeVar("_B", bound=_SupportsBool)
+
+_Boolean = TypeAliasType("_Boolean", bool | _B, type_params=(_B,))
+_RegexType = TypeAliasType(
+    "_RegexType",
+    AnyStr | Pattern[AnyStr],
+    type_params=(AnyStr,),
+)
+_MatchType = TypeAliasType(
+    "_MatchType",
+    AnyStr | tuple[AnyStr, ...] | dict[str, AnyStr],
+    type_params=(AnyStr,),
+)
+
+def identity(x: _T) -> _T: ...
+def constantly(x: _T) -> Callable[..., _T]: ...
 def caller(
-    *args: P.args,  # type: ignore[valid-type]  # ty: ignore[unbound-type-variable]
-    **kwargs: P.kwargs,  # type: ignore[valid-type]
-) -> Callable[[Callable[P, T]], T]: ...
+    *args: _P.args,  # type: ignore[valid-type]  # ty: ignore[unbound-type-variable]
+    **kwargs: _P.kwargs,  # type: ignore[valid-type]
+) -> Callable[[Callable[_P, _T]], _T]: ...
 
 func_partial: TypeAlias = partial[Any]  # ruff: ignore[snake-case-type-alias]
 
 rpartial: TypeAlias = partial[Any]  # ruff: ignore[snake-case-type-alias]
 
-class CurryCallable(Protocol[T_co]):
-    def __call__(self, arg: Any, /) -> T_co | CurryCallable[T_co]: ...
+class CurryCallable(Protocol[_T_co]):
+    def __call__(self, arg: Any, /) -> _T_co | CurryCallable[_T_co]: ...
 
-class AutoCurryCallable(Protocol[T_co]):
-    def __call__(self, *args: Any, **kwds: Any) -> T_co | AutoCurryCallable[T_co]: ...
+class AutoCurryCallable(Protocol[_T_co]):
+    def __call__(self, *args: Any, **kwds: Any) -> _T_co | AutoCurryCallable[_T_co]: ...
 
-def curry(func: Callable[..., T], n: int = ...) -> CurryCallable[T]: ...
-def rcurry(func: Callable[..., T], n: int = ...) -> CurryCallable[T]: ...
-def autocurry(func: Callable[..., T], n: int = ..., /) -> AutoCurryCallable[T]: ...
+def curry(func: Callable[..., _T], n: int = ...) -> CurryCallable[_T]: ...
+def rcurry(func: Callable[..., _T], n: int = ...) -> CurryCallable[_T]: ...
+def autocurry(func: Callable[..., _T], n: int = ..., /) -> AutoCurryCallable[_T]: ...
 
-Default = TypeAliasType("Default", Callable[[T], D] | D, type_params=(T, D))
+Default = TypeAliasType("Default", Callable[[_T], _D] | _D, type_params=(_T, _D))
 
 @overload
 def iffy(
-    action: Callable[[B], S],
+    action: Callable[[_B], _S],
     /,
-) -> Callable[[B], S | B]: ...
+) -> Callable[[_B], _S | _B]: ...
 @overload
 def iffy(
-    action: Callable[[B], S],
+    action: Callable[[_B], _S],
     /,
     *,
-    default: Default[B, D],
-) -> Callable[[B], S | D]: ...
+    default: Default[_B, _D],
+) -> Callable[[_B], _S | _D]: ...
 @overload
 def iffy(
-    pred: Callable[[T], Boolean[B]],
-    action: Callable[[T], S],
+    pred: Callable[[_T], _Boolean[_B]],
+    action: Callable[[_T], _S],
     /,
-) -> Callable[[T], S | T]: ...
+) -> Callable[[_T], _S | _T]: ...
 @overload
 def iffy(
-    pred: Callable[[T], Boolean[B]],
-    action: Callable[[T], S],
-    default: Default[T, D],
-) -> Callable[[T], S | D]: ...
+    pred: Callable[[_T], _Boolean[_B]],
+    action: Callable[[_T], _S],
+    default: Default[_T, _D],
+) -> Callable[[_T], _S | _D]: ...
 @overload
 def iffy(
     pred: None,
-    action: Callable[[B], S],
+    action: Callable[[_B], _S],
     /,
-) -> Callable[[B], S | B]: ...
+) -> Callable[[_B], _S | _B]: ...
 @overload
 def iffy(
     pred: None,
-    action: Callable[[B], S],
-    default: Default[B, D],
-) -> Callable[[B], S | D]: ...
+    action: Callable[[_B], _S],
+    default: Default[_B, _D],
+) -> Callable[[_B], _S | _D]: ...
 @overload
 def iffy(
-    pred: RegexType[AnyStr],
-    action: Callable[[str], S],
+    pred: _RegexType[AnyStr],
+    action: Callable[[str], _S],
     /,
-) -> Callable[[str], S | str]: ...
+) -> Callable[[str], _S | str]: ...
 @overload
 def iffy(
-    pred: RegexType[AnyStr],
-    action: Callable[[str], S],
-    default: Default[str, D],
-) -> Callable[[str], S | D]: ...
-@overload
-def iffy(
-    pred: int,
-    action: Callable[[Sequence[B]], B],
-    /,
-) -> Callable[[Sequence[B]], B]: ...
+    pred: _RegexType[AnyStr],
+    action: Callable[[str], _S],
+    default: Default[str, _D],
+) -> Callable[[str], _S | _D]: ...
 @overload
 def iffy(
     pred: int,
-    action: Callable[[Sequence[B]], B],
-    default: Default[Sequence[B], D],
-) -> Callable[[Sequence[B]], B | D]: ...
+    action: Callable[[Sequence[_B]], _B],
+    /,
+) -> Callable[[Sequence[_B]], _B]: ...
 @overload
 def iffy(
-    pred: Mapping[KT, VT],
-    action: Callable[[KT], S],
-    /,
-) -> Callable[[KT], S | KT]: ...
+    pred: int,
+    action: Callable[[Sequence[_B]], _B],
+    default: Default[Sequence[_B], _D],
+) -> Callable[[Sequence[_B]], _B | _D]: ...
 @overload
 def iffy(
-    pred: Mapping[KT, VT],
-    action: Callable[[KT], S],
-    default: Default[KT, D],
-) -> Callable[[KT], S | D]: ...
+    pred: Mapping[_KT, _VT],
+    action: Callable[[_KT], _S],
+    /,
+) -> Callable[[_KT], _S | _KT]: ...
 @overload
 def iffy(
-    pred: set[H],
-    action: Callable[[H], S],
-    /,
-) -> Callable[[H], S | H]: ...
+    pred: Mapping[_KT, _VT],
+    action: Callable[[_KT], _S],
+    default: Default[_KT, _D],
+) -> Callable[[_KT], _S | _D]: ...
 @overload
 def iffy(
-    pred: set[H],
-    action: Callable[[H], S],
-    default: Default[H, D],
-) -> Callable[[H], S | D]: ...
+    pred: set[_H],
+    action: Callable[[_H], _S],
+    /,
+) -> Callable[[_H], _S | _H]: ...
 @overload
-def compose() -> Callable[[T], T]: ...
+def iffy(
+    pred: set[_H],
+    action: Callable[[_H], _S],
+    default: Default[_H, _D],
+) -> Callable[[_H], _S | _D]: ...
 @overload
-def compose(fn1: Callable[P, T], /) -> Callable[P, T]: ...
+def compose() -> Callable[[_T], _T]: ...
 @overload
-def compose(fn1: Callable[[T1], S], fn2: Callable[P, T1], /) -> Callable[P, S]: ...
+def compose(fn1: Callable[_P, _T], /) -> Callable[_P, _T]: ...
 @overload
 def compose(
-    fn1: Callable[[T1], S],
-    fn2: Callable[[T2], T1],
-    fn3: Callable[P, T2],
-    /,
-) -> Callable[P, S]: ...
+    fn1: Callable[[_T1], _S], fn2: Callable[_P, _T1], /
+) -> Callable[_P, _S]: ...
 @overload
 def compose(
-    fn1: Callable[[T1], S],
-    fn2: Callable[[T2], T1],
-    fn3: Callable[[T3], T2],
-    fn4: Callable[P, T3],
+    fn1: Callable[[_T1], _S],
+    fn2: Callable[[_T2], _T1],
+    fn3: Callable[_P, _T2],
     /,
-) -> Callable[P, S]: ...
+) -> Callable[_P, _S]: ...
 @overload
 def compose(
-    fn1: Callable[[T1], S],
-    fn2: Callable[[T2], T1],
-    fn3: Callable[[T3], T2],
-    fn4: Callable[[T4], T3],
-    fn5: Callable[P, T4],
+    fn1: Callable[[_T1], _S],
+    fn2: Callable[[_T2], _T1],
+    fn3: Callable[[_T3], _T2],
+    fn4: Callable[_P, _T3],
     /,
-) -> Callable[P, S]: ...
+) -> Callable[_P, _S]: ...
 @overload
 def compose(
-    fn1: Callable[[T1], S],
-    fn2: Callable[[T2], T1],
-    fn3: Callable[[T3], T2],
-    fn4: Callable[[T4], T3],
-    fn5: Callable[[T5], T4],
-    fn6: Callable[P, T5],
+    fn1: Callable[[_T1], _S],
+    fn2: Callable[[_T2], _T1],
+    fn3: Callable[[_T3], _T2],
+    fn4: Callable[[_T4], _T3],
+    fn5: Callable[_P, _T4],
     /,
-) -> Callable[P, S]: ...
+) -> Callable[_P, _S]: ...
 @overload
-def compose(*fs: Callable[[T], T]) -> Callable[[T], T]: ...
+def compose(
+    fn1: Callable[[_T1], _S],
+    fn2: Callable[[_T2], _T1],
+    fn3: Callable[[_T3], _T2],
+    fn4: Callable[[_T4], _T3],
+    fn5: Callable[[_T5], _T4],
+    fn6: Callable[_P, _T5],
+    /,
+) -> Callable[_P, _S]: ...
+@overload
+def compose(*fs: Callable[[_T], _T]) -> Callable[[_T], _T]: ...
 @overload
 def compose(*fs: Callable[..., Any]) -> Callable[..., Any]: ...
 @overload
-def rcompose() -> Callable[[T], T]: ...
+def rcompose() -> Callable[[_T], _T]: ...
 @overload
-def rcompose(fn1: Callable[P, T], /) -> Callable[P, T]: ...
-@overload
-def rcompose(fn1: Callable[P, T1], fn2: Callable[[T1], S], /) -> Callable[P, S]: ...
+def rcompose(fn1: Callable[_P, _T], /) -> Callable[_P, _T]: ...
 @overload
 def rcompose(
-    fn1: Callable[P, T1],
-    fn2: Callable[[T1], T2],
-    fn3: Callable[[T2], S],
-    /,
-) -> Callable[P, S]: ...
+    fn1: Callable[_P, _T1], fn2: Callable[[_T1], _S], /
+) -> Callable[_P, _S]: ...
 @overload
 def rcompose(
-    fn1: Callable[P, T1],
-    fn2: Callable[[T1], T2],
-    fn3: Callable[[T2], T3],
-    fn4: Callable[[T3], S],
+    fn1: Callable[_P, _T1],
+    fn2: Callable[[_T1], _T2],
+    fn3: Callable[[_T2], _S],
     /,
-) -> Callable[P, S]: ...
+) -> Callable[_P, _S]: ...
 @overload
 def rcompose(
-    fn1: Callable[P, T1],
-    fn2: Callable[[T1], T2],
-    fn3: Callable[[T2], T3],
-    fn4: Callable[[T3], T4],
-    fn5: Callable[[T4], S],
+    fn1: Callable[_P, _T1],
+    fn2: Callable[[_T1], _T2],
+    fn3: Callable[[_T2], _T3],
+    fn4: Callable[[_T3], _S],
     /,
-) -> Callable[P, S]: ...
+) -> Callable[_P, _S]: ...
 @overload
 def rcompose(
-    fn1: Callable[P, T1],
-    fn2: Callable[[T1], T2],
-    fn3: Callable[[T2], T3],
-    fn4: Callable[[T3], T4],
-    fn5: Callable[[T4], T5],
-    fn6: Callable[[T5], S],
+    fn1: Callable[_P, _T1],
+    fn2: Callable[[_T1], _T2],
+    fn3: Callable[[_T2], _T3],
+    fn4: Callable[[_T3], _T4],
+    fn5: Callable[[_T4], _S],
     /,
-) -> Callable[P, S]: ...
+) -> Callable[_P, _S]: ...
 @overload
-def rcompose(fn: Callable[P, T], /, *fs: Callable[[T], T]) -> Callable[P, T]: ...
+def rcompose(
+    fn1: Callable[_P, _T1],
+    fn2: Callable[[_T1], _T2],
+    fn3: Callable[[_T2], _T3],
+    fn4: Callable[[_T3], _T4],
+    fn5: Callable[[_T4], _T5],
+    fn6: Callable[[_T5], _S],
+    /,
+) -> Callable[_P, _S]: ...
+@overload
+def rcompose(fn: Callable[_P, _T], /, *fs: Callable[[_T], _T]) -> Callable[_P, _T]: ...
 @overload
 def rcompose(*fs: Callable[..., Any]) -> Callable[..., Any]: ...
 @overload
-def complement(pred: Callable[P, Boolean[B]]) -> Callable[P, bool]: ...
+def complement(pred: Callable[_P, _Boolean[_B]]) -> Callable[_P, bool]: ...
 @overload
-def complement(pred: None) -> Callable[[Boolean[B]], bool]: ...
+def complement(pred: None) -> Callable[[_Boolean[_B]], bool]: ...
 @overload
-def ljuxt(*fs: Callable[P, T]) -> Callable[P, list[T]]: ...
+def ljuxt(*fs: Callable[_P, _T]) -> Callable[_P, list[_T]]: ...
 @overload
-def ljuxt(*fs: None) -> Callable[[T], list[T]]: ...
+def ljuxt(*fs: None) -> Callable[[_T], list[_T]]: ...
 @overload
 def ljuxt(
-    *fs: RegexType[AnyStr],
-) -> Callable[[str], list[MatchType[AnyStr] | None]]: ...
+    *fs: _RegexType[AnyStr],
+) -> Callable[[str], list[_MatchType[AnyStr] | None]]: ...
 @overload
-def ljuxt(*fs: int) -> Callable[[Sequence[T]], list[T]]: ...
+def ljuxt(*fs: int) -> Callable[[Sequence[_T]], list[_T]]: ...
 @overload
-def ljuxt(*fs: slice) -> Callable[[Sequence[T]], list[Sequence[T]]]: ...
+def ljuxt(*fs: slice) -> Callable[[Sequence[_T]], list[Sequence[_T]]]: ...
 @overload
-def ljuxt(*fs: Mapping[KT, VT]) -> Callable[[KT], list[VT]]: ...
+def ljuxt(*fs: Mapping[_KT, _VT]) -> Callable[[_KT], list[_VT]]: ...
 @overload
-def ljuxt(*fs: set[H]) -> Callable[[H], list[bool]]: ...
+def ljuxt(*fs: set[_H]) -> Callable[[_H], list[bool]]: ...
 @overload
-def juxt(*fs: Callable[P, T]) -> Callable[P, Iterable[T]]: ...
+def juxt(*fs: Callable[_P, _T]) -> Callable[_P, Iterable[_T]]: ...
 @overload
-def juxt(*fs: None) -> Callable[[T], Iterable[T]]: ...
+def juxt(*fs: None) -> Callable[[_T], Iterable[_T]]: ...
 @overload
 def juxt(
-    *fs: RegexType[AnyStr],
-) -> Callable[[str], Iterable[MatchType[AnyStr] | None]]: ...
+    *fs: _RegexType[AnyStr],
+) -> Callable[[str], Iterable[_MatchType[AnyStr] | None]]: ...
 @overload
-def juxt(*fs: int) -> Callable[[Sequence[T]], Iterable[T]]: ...
+def juxt(*fs: int) -> Callable[[Sequence[_T]], Iterable[_T]]: ...
 @overload
-def juxt(*fs: slice) -> Callable[[Sequence[T]], Iterable[Sequence[T]]]: ...
+def juxt(*fs: slice) -> Callable[[Sequence[_T]], Iterable[Sequence[_T]]]: ...
 @overload
-def juxt(*fs: Mapping[KT, VT]) -> Callable[[KT], Iterable[VT]]: ...
+def juxt(*fs: Mapping[_KT, _VT]) -> Callable[[_KT], Iterable[_VT]]: ...
 @overload
-def juxt(*fs: set[H]) -> Callable[[H], Iterable[bool]]: ...
+def juxt(*fs: set[_H]) -> Callable[[_H], Iterable[bool]]: ...
 
 __all__ = (
     "autocurry",
