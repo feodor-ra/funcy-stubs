@@ -1,5 +1,6 @@
 from collections.abc import Mapping, Sequence
-from functools import partial, reduce
+from functools import partial
+from functools import reduce as reduce
 from typing import Any, AnyStr, Callable, Iterable, Protocol, overload
 
 from typing_extensions import TypeAlias, TypeAliasType
@@ -271,6 +272,5 @@ __all__ = (
     "partial",
     "rcompose",
     "rcurry",
-    "reduce",
     "rpartial",
 )

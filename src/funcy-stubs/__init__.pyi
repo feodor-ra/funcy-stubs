@@ -77,7 +77,6 @@ from .flow import (
     throttle,
     wrap_with,
 )
-from .funcmakers import make_func, make_pred
 from .funcolls import all_fn, any_fn, none_fn, one_fn, some_fn
 from .funcs import (
     autocurry,
@@ -94,7 +93,6 @@ from .funcs import (
     partial,
     rcompose,
     rcurry,
-    reduce,
     rpartial,
 )
 from .objects import LazyObject, cached_property, cached_readonly, monkey, wrap_prop
@@ -305,9 +303,7 @@ __all__ = (
     "lwhere",
     "lwithout",
     "lzip",
-    "make_func",
     "make_lookuper",
-    "make_pred",
     "map",
     "mapcat",
     "memoize",
@@ -349,7 +345,6 @@ __all__ = (
     "re_iter",
     "re_test",
     "re_tester",
-    "reduce",
     "reductions",
     "remove",
     "repeat",
