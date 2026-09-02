@@ -216,7 +216,7 @@ def get_in(
     coll: Mapping[KT, VT],
     path: Iterable[KT],
     default: S = None,
-) -> KT | S: ...
+) -> VT | S: ...
 @overload
 def get_lax(
     coll: GetCollectionProtocol[T, T1],
