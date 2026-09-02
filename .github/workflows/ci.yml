@@ -68,8 +68,12 @@ jobs:
           cache-dependency-glob: uv.lock
       - name: Install dependencies
         run: uv sync --frozen
+      # A regular (non-editable) install puts funcy-stubs into site-packages,
+      # so stubtest discovers the stubs the same way end users' type checkers do
+      - name: Install stubs into site-packages
+        run: uv pip install --no-deps --force-reinstall .
       - name: Stubtest
-        run: MYPYPATH=src uv run python -m mypy.stubtest funcy --allowlist stubtest-allowlist.txt
+        run: uv run --no-sync python -m mypy.stubtest funcy --allowlist stubtest-allowlist.txt
 
   build:
     name: "Build"
