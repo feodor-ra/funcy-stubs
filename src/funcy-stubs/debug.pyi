@@ -53,6 +53,17 @@ class LabeledContextDecorator(Generic[_PrintFuncType]):
     label: str | None
     repr_len: int
 
+    def __init__(
+        self,
+        print_func: _PrintFuncType,
+        label: str | None = None,
+        repr_len: int = ...,
+    ) -> None: ...
+    @overload
+    def __call__(self, label: Callable[P, T], /) -> Callable[P, T]: ...
+    @overload
+    def __call__(self, label: str | None = None, /, **kwargs: Any) -> Self: ...
+    def decorator(self, func: Callable[P, T]) -> Callable[P, T]: ...
     def __enter__(self) -> Self: ...
     @overload
     def __exit__(
@@ -70,7 +81,7 @@ class LabeledContextDecorator(Generic[_PrintFuncType]):
     ) -> None: ...
 
 class log_errors(LabeledContextDecorator[_PrintFuncType]):
-    stack: int
+    stack: bool
 
     def __init__(
         self,
@@ -79,26 +90,12 @@ class log_errors(LabeledContextDecorator[_PrintFuncType]):
         stack: bool = True,
         repr_len: int = ...,
     ) -> None: ...
-    def __call__(
-        self,
-        func: Callable[P, T],
-    ) -> Callable[P, T]: ...
 
-class print_errors(log_errors[PrintFunc]):
-    def __init__(
-        self,
-        label: str | None = None,
-        stack: bool = True,
-        repr_len: int = ...,
-    ) -> None: ...
-    def __call__(
-        self,
-        func: Callable[P, T],
-    ) -> Callable[P, T]: ...
+print_errors: log_errors[PrintFunc]
 
 class log_durations(LabeledContextDecorator[_PrintFuncType]):
     format_time: Callable[[float], str]
-    threshold: int
+    threshold: float
     start: float
 
     def __init__(
@@ -106,26 +103,11 @@ class log_durations(LabeledContextDecorator[_PrintFuncType]):
         print_func: _PrintFuncType,
         label: str | None = None,
         unit: Unit = "auto",
-        threshold: int = -1,
+        threshold: float = -1,
         repr_len: int = ...,
     ) -> None: ...
-    def __call__(
-        self,
-        func: Callable[P, T],
-    ) -> Callable[P, T]: ...
 
-class print_durations(log_durations[PrintFunc]):
-    def __init__(
-        self,
-        label: str | None = None,
-        unit: Unit = "auto",
-        threshold: int = -1,
-        repr_len: int = ...,
-    ) -> None: ...
-    def __call__(
-        self,
-        func: Callable[P, T],
-    ) -> Callable[P, T]: ...
+print_durations: log_durations[PrintFunc]
 
 def log_iter_durations(
     seq: Iterable[T],
