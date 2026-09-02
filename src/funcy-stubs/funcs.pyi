@@ -32,9 +32,9 @@ def caller(
     **kwargs: P.kwargs,
 ) -> Callable[[Callable[P, T]], T]: ...
 
-func_partial: TypeAlias = partial[Any]  # noqa: PYI042
+func_partial: TypeAlias = partial[Any]  # ruff: ignore[snake-case-type-alias]
 
-rpartial: TypeAlias = partial[Any]  # noqa: PYI042
+rpartial: TypeAlias = partial[Any]  # ruff: ignore[snake-case-type-alias]
 
 class CurryCallable(Protocol[T_co]):
     def __call__(self, arg: Any, /) -> T_co | CurryCallable[T_co]: ...
