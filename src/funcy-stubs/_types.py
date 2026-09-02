@@ -1,6 +1,12 @@
+import sys
 from abc import abstractmethod
-from re import Pattern
-from typing import AnyStr, Hashable, Protocol, TypeVar, Union
+from typing import AnyStr, Dict, Hashable, Protocol, Tuple, TypeVar, Union
+
+if sys.version_info >= (3, 9):
+    from re import Pattern
+else:
+    # re.Pattern is not subscriptable at runtime before 3.9
+    from typing import Pattern
 
 from typing_extensions import ParamSpec, TypeAliasType
 
@@ -41,6 +47,6 @@ RegexType = TypeAliasType(
 )
 MatchType = TypeAliasType(
     "MatchType",
-    Union[AnyStr, tuple[AnyStr, ...], dict[str, AnyStr]],
+    Union[AnyStr, Tuple[AnyStr, ...], Dict[str, AnyStr]],
     type_params=(AnyStr,),
 )
