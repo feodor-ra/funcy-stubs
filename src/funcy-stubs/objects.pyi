@@ -6,7 +6,10 @@ from typing import (
     Generic,
     NoReturn,
     TypeVar,
+    overload,
 )
+
+from typing_extensions import Self
 
 from ._types import P, S, T
 
@@ -17,6 +20,9 @@ class cached_property(property, Generic[T, S]):
     fdel: Any = None
 
     def __init__(self, fget: Callable[[T], S] | None) -> None: ...
+    @overload
+    def __get__(self, instance: None, owner: type | None = None, /) -> Self: ...
+    @overload
     def __get__(self, instance: T, owner: type | None = None, /) -> S: ...
 
 class cached_readonly(cached_property[T, S]):
