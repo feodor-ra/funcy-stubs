@@ -225,6 +225,10 @@ def one(pred: Callable[[_T], _Boolean[_B]], seq: Iterable[_T]) -> bool: ...
 def some(seq: Iterable[_Boolean[_B]], /) -> _B: ...
 @overload
 def some(pred: Callable[[_T], TypeGuard[_S]], seq: Iterable[_T]) -> _S: ...
+
+# Fallback for a plain (non-TypeGuard) predicate, e.g. `some(lambda x: x > 5, nums)`.
+@overload
+def some(pred: Callable[[_T], _Boolean[_B]], seq: Iterable[_T]) -> _T | None: ...
 def zipdict(keys: Iterable[_KT], vals: Iterable[_VT]) -> dict[_KT, _VT]: ...
 def flip(mapping: Mapping[_KT, _KT1]) -> dict[_KT1, _KT]: ...
 def project(mapping: Mapping[_KT, _VT], keys: Container[_KT]) -> dict[_KT, _VT]: ...
@@ -287,10 +291,16 @@ def set_in(
 ) -> _SetCollectionProtocol[_T]: ...
 @overload
 def set_in(
+    coll: dict[_KT, _VT],
+    path: Iterable[_KT],
+    value: _T,
+) -> dict[_KT, _VT | _T]: ...
+@overload
+def set_in(
     coll: MutableMapping[_KT, _VT],
     path: Iterable[_KT],
     value: _T,
-) -> Mapping[_KT, _T]: ...
+) -> MutableMapping[_KT, _VT | _T]: ...
 @overload
 def update_in(
     coll: _SetCollectionProtocol[_T],
@@ -300,11 +310,18 @@ def update_in(
 ) -> _SetCollectionProtocol[_T]: ...
 @overload
 def update_in(
+    coll: dict[_KT, _VT],
+    path: Iterable[_KT],
+    update: Callable[[Any], Any],
+    default: Any = None,
+) -> dict[_KT, _VT]: ...
+@overload
+def update_in(
     coll: MutableMapping[_KT, _VT],
     path: Iterable[_KT],
-    update: Callable[[_SetCollectionProtocol[_T]], Any],
-    default: _T | None = None,
-) -> Mapping[_KT, _T]: ...
+    update: Callable[[Any], Any],
+    default: Any = None,
+) -> MutableMapping[_KT, _VT]: ...
 def del_in(
     coll: _DelCollectionType,
     path: Iterable[int | Hashable],
@@ -313,10 +330,22 @@ def del_in(
 def has_path(coll: _GetCollectionProtocol[Any, _T], path: Iterable[_T]) -> bool: ...
 @overload
 def has_path(coll: Mapping[_KT, Any], path: Iterable[_KT]) -> bool: ...
+@overload
+def where(
+    mappings: Iterable[dict[str, _VT]],
+    **cond: _VT,
+) -> Iterable[dict[str, _VT]]: ...
+@overload
 def where(
     mappings: Iterable[Mapping[str, _VT]],
     **cond: _VT,
 ) -> Iterable[Mapping[str, _VT]]: ...
+@overload
+def lwhere(  # pyright: ignore[reportOverlappingOverload]
+    mappings: Iterable[dict[str, _VT]],
+    **cond: _VT,
+) -> list[dict[str, _VT]]: ...
+@overload
 def lwhere(
     mappings: Iterable[Mapping[str, _VT]],
     **cond: _VT,
