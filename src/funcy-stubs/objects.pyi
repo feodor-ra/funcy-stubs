@@ -1,8 +1,8 @@
+from contextlib import AbstractContextManager
 from types import ModuleType
 from typing import (
     Any,
     Callable,
-    ContextManager,
     Generic,
     NoReturn,
     TypeVar,
@@ -18,8 +18,8 @@ _T = TypeVar("_T")
 _Prop = TypeVar("_Prop", bound=property)
 
 class cached_property(property, Generic[_T, _S]):
-    fset: Any = None
-    fdel: Any = None
+    fset: Any = ...
+    fdel: Any = ...
 
     def __init__(self, fget: Callable[[_T], _S] | None) -> None: ...
     @overload
@@ -30,7 +30,7 @@ class cached_property(property, Generic[_T, _S]):
 class cached_readonly(cached_property[_T, _S]):
     def __set__(self, instance: Any, value: Any) -> NoReturn: ...
 
-def wrap_prop(ctx: ContextManager[Any]) -> Callable[[_Prop], _Prop]: ...
+def wrap_prop(ctx: AbstractContextManager[Any]) -> Callable[[_Prop], _Prop]: ...
 def monkey(
     cls: type | ModuleType,
     name: str | None = None,
