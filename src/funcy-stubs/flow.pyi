@@ -1,13 +1,12 @@
 from abc import abstractmethod
 from collections.abc import Iterable
-from contextlib import nullcontext, suppress
+from contextlib import AbstractContextManager, nullcontext, suppress
 from datetime import datetime, timedelta
 from threading import Lock
 from types import TracebackType
 from typing import (
     Any,
     Callable,
-    ContextManager,
     NoReturn,
     Protocol,
     SupportsBytes,
@@ -121,7 +120,7 @@ def once_per(
 def once(func: Callable[_P, _T]) -> _OncePerCallableProtocol[_P, _T]: ...
 def once_per_args(func: Callable[_P, _T]) -> _OncePerCallableProtocol[_P, _T]: ...
 def wrap_with(
-    ctx: ContextManager[Any],
+    ctx: AbstractContextManager[Any],
 ) -> Callable[[Callable[_P, _T]], Callable[_P, _T]]: ...
 
 __all__ = [
