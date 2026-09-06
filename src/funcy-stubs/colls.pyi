@@ -34,6 +34,7 @@ _T_co = TypeVar("_T_co", covariant=True)
 _T_contra = TypeVar("_T_contra", contravariant=True)
 
 _Coll = TypeVar("_Coll", bound=Iterable[Any])
+_M = TypeVar("_M", bound=Mapping[str, Any])
 _KT1 = TypeVar("_KT1", bound=Hashable)
 
 class _ItemsProtocol(Protocol[_T_co]):
@@ -295,26 +296,8 @@ def del_in(
 def has_path(
     coll: _GetCollectionProtocol[Any, Any], path: Iterable[Hashable]
 ) -> bool: ...
-@overload
-def where(
-    mappings: Iterable[dict[str, _VT]],
-    **cond: _VT,
-) -> Iterable[dict[str, _VT]]: ...
-@overload
-def where(
-    mappings: Iterable[Mapping[str, _VT]],
-    **cond: _VT,
-) -> Iterable[Mapping[str, _VT]]: ...
-@overload
-def lwhere(  # pyright: ignore[reportOverlappingOverload]
-    mappings: Iterable[dict[str, _VT]],
-    **cond: _VT,
-) -> list[dict[str, _VT]]: ...
-@overload
-def lwhere(
-    mappings: Iterable[Mapping[str, _VT]],
-    **cond: _VT,
-) -> list[Mapping[str, _VT]]: ...
+def where(mappings: Iterable[_M], **cond: object) -> Iterable[_M]: ...
+def lwhere(mappings: Iterable[_M], **cond: object) -> list[_M]: ...
 def pluck(key: _KT, mappings: Iterable[Mapping[_KT, _VT]]) -> Iterable[_VT]: ...
 def lpluck(key: _KT, mappings: Iterable[Mapping[_KT, _VT]]) -> list[_VT]: ...
 def pluck_attr(attr: str, objects: Iterable[object]) -> Iterable[Any]: ...
