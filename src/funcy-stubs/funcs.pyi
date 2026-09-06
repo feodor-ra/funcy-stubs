@@ -1,4 +1,3 @@
-from abc import abstractmethod
 from collections.abc import Mapping, Sequence
 from functools import partial
 from functools import reduce as reduce
@@ -29,14 +28,8 @@ _KT = TypeVar("_KT", bound=Hashable)
 _VT = TypeVar("_VT")
 _H = TypeVar("_H", bound=Hashable)
 _T_co = TypeVar("_T_co", covariant=True)
+_B = TypeVar("_B")
 
-class _SupportsBool(Protocol):
-    @abstractmethod
-    def __bool__(self) -> bool: ...
-
-_B = TypeVar("_B", bound=_SupportsBool)
-
-_Boolean = TypeAliasType("_Boolean", bool | _B, type_params=(_B,))
 _RegexType = TypeAliasType(
     "_RegexType",
     AnyStr | Pattern[AnyStr],
@@ -93,13 +86,13 @@ def iffy(
 ) -> Callable[[_B], _S | _D]: ...
 @overload
 def iffy(
-    pred: Callable[[_T], _Boolean[_B]],
+    pred: Callable[[_T], object],
     action: Callable[[_T], _S],
     /,
 ) -> Callable[[_T], _S | _T]: ...
 @overload
 def iffy(
-    pred: Callable[[_T], _Boolean[_B]],
+    pred: Callable[[_T], object],
     action: Callable[[_T], _S],
     default: _Default[_T, _D],
 ) -> Callable[[_T], _S | _D]: ...
@@ -256,9 +249,9 @@ def rcompose(fn: Callable[_P, _T], /, *fs: Callable[[_T], _T]) -> Callable[_P, _
 @overload
 def rcompose(*fs: Callable[..., Any]) -> Callable[..., Any]: ...
 @overload
-def complement(pred: Callable[_P, _Boolean[_B]]) -> Callable[_P, bool]: ...
+def complement(pred: Callable[_P, object]) -> Callable[_P, bool]: ...
 @overload
-def complement(pred: None) -> Callable[[_Boolean[_B]], bool]: ...
+def complement(pred: None) -> Callable[[object], bool]: ...
 @overload
 def ljuxt(*fs: Callable[_P, _T]) -> Callable[_P, list[_T]]: ...
 @overload
