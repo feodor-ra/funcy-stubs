@@ -6,6 +6,7 @@ from collections.abc import (
     Iterator,
     KeysView,
     Mapping,
+    Sequence,
     ValuesView,
 )
 from typing import (
@@ -55,9 +56,9 @@ class _SetCollectionProtocol(Protocol[_T_contra]):
 
 class _DelCollectionProtocol(Protocol):
     @abstractmethod
-    def __delitem__(self, key: SupportsIndex, /) -> None: ...
+    def __delitem__(self, key: Any, /) -> None: ...
     @abstractmethod
-    def __getitem__(self, i: SupportsIndex, /) -> Any: ...
+    def __getitem__(self, i: Any, /) -> Any: ...
 
 _DelCollectionType = TypeVar("_DelCollectionType", bound=_DelCollectionProtocol)
 
@@ -226,99 +227,74 @@ def zip_values(*dicts: Mapping[Any, _VT]) -> Iterable[tuple[_VT, ...]]: ...
 def zip_dicts(*dicts: Mapping[_KT, _VT]) -> Iterable[tuple[_KT, tuple[_VT, ...]]]: ...
 @overload
 def get_in(
-    coll: _GetCollectionProtocol[_T, _T1],
-    path: Iterable[_T1],
+    coll: _GetCollectionProtocol[_T, Any],
+    path: Iterable[Hashable],
     default: None = None,
 ) -> _T | None: ...
 @overload
 def get_in(
-    coll: _GetCollectionProtocol[_T, _T1],
-    path: Iterable[_T1],
+    coll: _GetCollectionProtocol[_T, Any],
+    path: Iterable[Hashable],
     default: _S,
 ) -> _T | _S: ...
 @overload
-def get_in(
-    coll: Mapping[_KT, _VT],
-    path: Iterable[_KT],
-    default: None = None,
-) -> _VT | None: ...
-@overload
-def get_in(
-    coll: Mapping[_KT, _VT],
-    path: Iterable[_KT],
-    default: _S,
-) -> _VT | _S: ...
-@overload
 def get_lax(
-    coll: _GetCollectionProtocol[_T, _T1],
-    path: Iterable[_T1],
+    coll: _GetCollectionProtocol[_T, Any],
+    path: Iterable[Hashable],
     default: None = None,
 ) -> _T | None: ...
 @overload
 def get_lax(
-    coll: _GetCollectionProtocol[_T, _T1],
-    path: Iterable[_T1],
+    coll: _GetCollectionProtocol[_T, Any],
+    path: Iterable[Hashable],
     default: _S,
 ) -> _T | _S: ...
-@overload
-def get_lax(
-    coll: Mapping[_KT, _VT],
-    path: Iterable[_KT],
-    default: None = None,
-) -> _VT | None: ...
-@overload
-def get_lax(
-    coll: Mapping[_KT, _VT],
-    path: Iterable[_KT],
-    default: _S,
-) -> _VT | _S: ...
 @overload
 def set_in(
     coll: _SetCollectionProtocol[_T],
-    path: Iterable[int | Hashable],
+    path: Sequence[Hashable],
     value: _T,
 ) -> _SetCollectionProtocol[_T]: ...
 @overload
 def set_in(
     coll: dict[_KT, _VT],
-    path: Iterable[_KT],
+    path: Sequence[Hashable],
     value: _T,
 ) -> dict[_KT, _VT | _T]: ...
 @overload
 def set_in(
     coll: MutableMapping[_KT, _VT],
-    path: Iterable[_KT],
+    path: Sequence[Hashable],
     value: _T,
 ) -> MutableMapping[_KT, _VT | _T]: ...
 @overload
 def update_in(
     coll: _SetCollectionProtocol[_T],
-    path: Iterable[int | Hashable],
+    path: Sequence[Hashable],
     update: Callable[[Any], Any],
     default: _T | None = None,
 ) -> _SetCollectionProtocol[_T]: ...
 @overload
 def update_in(
     coll: dict[_KT, _VT],
-    path: Iterable[_KT],
+    path: Sequence[Hashable],
     update: Callable[[Any], _S],
     default: Any = None,
 ) -> dict[_KT, _VT | _S]: ...
 @overload
 def update_in(
     coll: MutableMapping[_KT, _VT],
-    path: Iterable[_KT],
+    path: Sequence[Hashable],
     update: Callable[[Any], _S],
     default: Any = None,
 ) -> MutableMapping[_KT, _VT | _S]: ...
 def del_in(
     coll: _DelCollectionType,
-    path: Iterable[int | Hashable],
+    path: Sequence[Hashable],
 ) -> _DelCollectionType: ...
-@overload
-def has_path(coll: _GetCollectionProtocol[Any, _T], path: Iterable[_T]) -> bool: ...
-@overload
-def has_path(coll: Mapping[_KT, Any], path: Iterable[_KT]) -> bool: ...
+def has_path(
+    coll: _GetCollectionProtocol[Any, Any], path: Iterable[Hashable]
+) -> bool: ...
 @overload
 def where(
     mappings: Iterable[dict[str, _VT]],
