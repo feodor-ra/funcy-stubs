@@ -32,6 +32,7 @@ from .colls import (
     select_values,
     set_in,
     some,
+    split_keys,
     update_in,
     walk,
     walk_keys,
@@ -93,6 +94,7 @@ from .funcs import (
     partial,
     rcompose,
     rcurry,
+    reduce,
     rpartial,
 )
 from .objects import LazyObject, cached_property, cached_readonly, monkey, wrap_prop
@@ -345,6 +347,7 @@ __all__ = [
     "re_iter",
     "re_test",
     "re_tester",
+    "reduce",
     "reductions",
     "remove",
     "repeat",
@@ -365,6 +368,7 @@ __all__ = [
     "split",
     "split_at",
     "split_by",
+    "split_keys",
     "str_join",
     "sums",
     "suppress",

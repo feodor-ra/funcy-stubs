@@ -39,7 +39,7 @@ class _LimitRateCallableProtocol(Protocol[_P, _T_co]):
     def __call__(self, *args: _P.args, **kwargs: _P.kwargs) -> _T_co: ...
 
 class _ThrottleCallableProtocol(Protocol[_P, _T_co]):
-    blocked_until: datetime | None
+    blocked_until: float
 
     def __call__(self, *args: _P.args, **kwargs: _P.kwargs) -> _T_co: ...
 

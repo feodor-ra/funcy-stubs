@@ -1,6 +1,5 @@
 from collections.abc import Mapping, Sequence
-from functools import partial
-from functools import reduce as reduce
+from functools import partial, reduce
 from re import Pattern
 from typing import (
     Any,
@@ -300,5 +299,6 @@ __all__ = [
     "partial",
     "rcompose",
     "rcurry",
+    "reduce",
     "rpartial",
 ]

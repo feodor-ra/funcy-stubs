@@ -51,8 +51,3 @@ funcy.seqs.mapcat
 # them as plain functions returning Iterable, per the project convention.
 funcy.seqs.cat
 funcy.seqs.concat
-
-# --- legacy Python 2 compatibility ------------------------------------------
-# funcy.py2 builds ~50 renamed aliases dynamically via setattr; a faithful
-# stub is not worth maintaining for a Python 2 era interface.
-funcy.py2
