@@ -82,8 +82,8 @@ def reraise(
 def retry(
     tries: int,
     errors: Iterable[type[Exception]] | type[Exception] = ...,
-    timeout: int | Callable[[int], int] = 0,
-    filter_errors: Callable[[Exception], bool] | None = None,
+    timeout: float | Callable[[int], float] = 0,
+    filter_errors: Callable[[Exception], object] | None = None,
 ) -> Callable[[Callable[_P, _T]], Callable[_P, _T]]: ...
 def fallback(
     *approaches: Callable[[], _T]
