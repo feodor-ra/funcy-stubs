@@ -2,7 +2,6 @@ from abc import abstractmethod
 from collections.abc import Iterable
 from contextlib import AbstractContextManager, nullcontext, suppress
 from datetime import datetime, timedelta
-from threading import Lock
 from types import TracebackType
 from typing import (
     Any,
@@ -41,14 +40,10 @@ class _LimitRateCallableProtocol(Protocol[_P, _T_co]):
 class _ThrottleCallableProtocol(Protocol[_P, _T_co]):
     blocked_until: float
 
-    def __call__(self, *args: _P.args, **kwargs: _P.kwargs) -> _T_co: ...
+    def __call__(self, *args: _P.args, **kwargs: _P.kwargs) -> _T_co | None: ...
 
-class _OncePerCallableProtocol(Protocol[_P, _T]):
-    lock: Lock
-    done_set: set[_T]
-    done_list: list[_T]
-
-    def __call__(self, *args: _P.args, **kwargs: _P.kwargs) -> _T: ...
+class _OncePerCallableProtocol(Protocol[_P, _T_co]):
+    def __call__(self, *args: _P.args, **kwargs: _P.kwargs) -> _T_co | None: ...
 
 @overload
 def raiser(exception_or_class: str) -> Callable[..., NoReturn]: ...
