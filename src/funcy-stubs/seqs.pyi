@@ -707,19 +707,131 @@ def count_by(f: Mapping[_KT, _H], seq: Iterable[_KT]) -> defaultdict[_H, int]: .
 def count_by(f: set[_H], seq: Iterable[_H]) -> defaultdict[bool, int]: ...
 def count_reps(seq: Iterable[_KT]) -> defaultdict[_KT, int]: ...
 @overload
+def partition(n: int, seq: str, /) -> Iterable[str]: ...  # type: ignore[overload-overlap]
+@overload
+def partition(n: int, seq: bytearray, /) -> Iterable[bytearray]: ...  # type: ignore[overload-overlap]
+@overload
+def partition(n: int, seq: bytes, /) -> Iterable[bytes]: ...  # type: ignore[overload-overlap]
+@overload
+def partition(n: int, seq: range, /) -> Iterable[range]: ...  # type: ignore[overload-overlap]
+@overload
+def partition(n: int, seq: tuple[_T, ...], /) -> Iterable[tuple[_T, ...]]: ...  # type: ignore[overload-overlap]
+@overload
+def partition(n: int, seq: list[_T], /) -> Iterable[list[_T]]: ...
+@overload
+def partition(n: int, seq: Sequence[_T], /) -> Iterable[Sequence[_T]]: ...  # type: ignore[overload-overlap]
+@overload
 def partition(n: int, seq: Iterable[_T], /) -> Iterable[list[_T]]: ...
+@overload
+def partition(n: int, step: int, seq: str) -> Iterable[str]: ...  # type: ignore[overload-overlap]
+@overload
+def partition(n: int, step: int, seq: bytearray) -> Iterable[bytearray]: ...  # type: ignore[overload-overlap]
+@overload
+def partition(n: int, step: int, seq: bytes) -> Iterable[bytes]: ...  # type: ignore[overload-overlap]
+@overload
+def partition(n: int, step: int, seq: range) -> Iterable[range]: ...  # type: ignore[overload-overlap]
+@overload
+def partition(n: int, step: int, seq: tuple[_T, ...]) -> Iterable[tuple[_T, ...]]: ...  # type: ignore[overload-overlap]
+@overload
+def partition(n: int, step: int, seq: list[_T]) -> Iterable[list[_T]]: ...
+@overload
+def partition(n: int, step: int, seq: Sequence[_T]) -> Iterable[Sequence[_T]]: ...  # type: ignore[overload-overlap]
 @overload
 def partition(n: int, step: int, seq: Iterable[_T]) -> Iterable[list[_T]]: ...
 @overload
+def lpartition(n: int, seq: str, /) -> list[str]: ...  # type: ignore[overload-overlap]
+@overload
+def lpartition(n: int, seq: bytearray, /) -> list[bytearray]: ...  # type: ignore[overload-overlap]
+@overload
+def lpartition(n: int, seq: bytes, /) -> list[bytes]: ...  # type: ignore[overload-overlap]
+@overload
+def lpartition(n: int, seq: range, /) -> list[range]: ...  # type: ignore[overload-overlap]
+@overload
+def lpartition(n: int, seq: tuple[_T, ...], /) -> list[tuple[_T, ...]]: ...  # type: ignore[overload-overlap]
+@overload
+def lpartition(n: int, seq: list[_T], /) -> list[list[_T]]: ...
+@overload
+def lpartition(n: int, seq: Sequence[_T], /) -> list[Sequence[_T]]: ...  # type: ignore[overload-overlap]
+@overload
 def lpartition(n: int, seq: Iterable[_T], /) -> list[list[_T]]: ...
+@overload
+def lpartition(n: int, step: int, seq: str) -> list[str]: ...  # type: ignore[overload-overlap]
+@overload
+def lpartition(n: int, step: int, seq: bytearray) -> list[bytearray]: ...  # type: ignore[overload-overlap]
+@overload
+def lpartition(n: int, step: int, seq: bytes) -> list[bytes]: ...  # type: ignore[overload-overlap]
+@overload
+def lpartition(n: int, step: int, seq: range) -> list[range]: ...  # type: ignore[overload-overlap]
+@overload
+def lpartition(n: int, step: int, seq: tuple[_T, ...]) -> list[tuple[_T, ...]]: ...  # type: ignore[overload-overlap]
+@overload
+def lpartition(n: int, step: int, seq: list[_T]) -> list[list[_T]]: ...
+@overload
+def lpartition(n: int, step: int, seq: Sequence[_T]) -> list[Sequence[_T]]: ...  # type: ignore[overload-overlap]
 @overload
 def lpartition(n: int, step: int, seq: Iterable[_T]) -> list[list[_T]]: ...
 @overload
+def chunks(n: int, seq: str, /) -> Iterable[str]: ...  # type: ignore[overload-overlap]
+@overload
+def chunks(n: int, seq: bytearray, /) -> Iterable[bytearray]: ...  # type: ignore[overload-overlap]
+@overload
+def chunks(n: int, seq: bytes, /) -> Iterable[bytes]: ...  # type: ignore[overload-overlap]
+@overload
+def chunks(n: int, seq: range, /) -> Iterable[range]: ...  # type: ignore[overload-overlap]
+@overload
+def chunks(n: int, seq: tuple[_T, ...], /) -> Iterable[tuple[_T, ...]]: ...  # type: ignore[overload-overlap]
+@overload
+def chunks(n: int, seq: list[_T], /) -> Iterable[list[_T]]: ...
+@overload
+def chunks(n: int, seq: Sequence[_T], /) -> Iterable[Sequence[_T]]: ...  # type: ignore[overload-overlap]
+@overload
 def chunks(n: int, seq: Iterable[_T], /) -> Iterable[list[_T]]: ...
+@overload
+def chunks(n: int, step: int, seq: str) -> Iterable[str]: ...  # type: ignore[overload-overlap]
+@overload
+def chunks(n: int, step: int, seq: bytearray) -> Iterable[bytearray]: ...  # type: ignore[overload-overlap]
+@overload
+def chunks(n: int, step: int, seq: bytes) -> Iterable[bytes]: ...  # type: ignore[overload-overlap]
+@overload
+def chunks(n: int, step: int, seq: range) -> Iterable[range]: ...  # type: ignore[overload-overlap]
+@overload
+def chunks(n: int, step: int, seq: tuple[_T, ...]) -> Iterable[tuple[_T, ...]]: ...  # type: ignore[overload-overlap]
+@overload
+def chunks(n: int, step: int, seq: list[_T]) -> Iterable[list[_T]]: ...
+@overload
+def chunks(n: int, step: int, seq: Sequence[_T]) -> Iterable[Sequence[_T]]: ...  # type: ignore[overload-overlap]
 @overload
 def chunks(n: int, step: int, seq: Iterable[_T]) -> Iterable[list[_T]]: ...
 @overload
+def lchunks(n: int, seq: str, /) -> list[str]: ...  # type: ignore[overload-overlap]
+@overload
+def lchunks(n: int, seq: bytearray, /) -> list[bytearray]: ...  # type: ignore[overload-overlap]
+@overload
+def lchunks(n: int, seq: bytes, /) -> list[bytes]: ...  # type: ignore[overload-overlap]
+@overload
+def lchunks(n: int, seq: range, /) -> list[range]: ...  # type: ignore[overload-overlap]
+@overload
+def lchunks(n: int, seq: tuple[_T, ...], /) -> list[tuple[_T, ...]]: ...  # type: ignore[overload-overlap]
+@overload
+def lchunks(n: int, seq: list[_T], /) -> list[list[_T]]: ...
+@overload
+def lchunks(n: int, seq: Sequence[_T], /) -> list[Sequence[_T]]: ...  # type: ignore[overload-overlap]
+@overload
 def lchunks(n: int, seq: Iterable[_T], /) -> list[list[_T]]: ...
+@overload
+def lchunks(n: int, step: int, seq: str) -> list[str]: ...  # type: ignore[overload-overlap]
+@overload
+def lchunks(n: int, step: int, seq: bytearray) -> list[bytearray]: ...  # type: ignore[overload-overlap]
+@overload
+def lchunks(n: int, step: int, seq: bytes) -> list[bytes]: ...  # type: ignore[overload-overlap]
+@overload
+def lchunks(n: int, step: int, seq: range) -> list[range]: ...  # type: ignore[overload-overlap]
+@overload
+def lchunks(n: int, step: int, seq: tuple[_T, ...]) -> list[tuple[_T, ...]]: ...  # type: ignore[overload-overlap]
+@overload
+def lchunks(n: int, step: int, seq: list[_T]) -> list[list[_T]]: ...
+@overload
+def lchunks(n: int, step: int, seq: Sequence[_T]) -> list[Sequence[_T]]: ...  # type: ignore[overload-overlap]
 @overload
 def lchunks(n: int, step: int, seq: Iterable[_T]) -> list[list[_T]]: ...
 @overload
