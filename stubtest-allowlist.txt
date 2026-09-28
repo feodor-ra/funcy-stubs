@@ -4,7 +4,6 @@
 # --- funcy's @decorator factories -------------------------------------------
 # inspect sees the raw signature with the leading `call` argument, while the
 # stubs model the user-facing call pattern (without `call`).
-funcy.calc.memoize
 funcy.debug.log_calls
 funcy.debug.log_enters
 funcy.debug.log_exits
@@ -16,6 +15,14 @@ funcy.flow.joining
 funcy.flow.post_processing
 funcy.flow.retry
 funcy.flow.wrap_with
+
+# --- memoize / cache with the .skip attribute -------------------------------
+# The stubs declare memoize and cache as variables typed by private protocols
+# so they can carry .skip (SkipMemory); stubtest sees plain runtime functions.
+# memoize's optional function argument is also named _func at runtime but is
+# positional-only in the stubs.
+funcy.calc.cache
+funcy.calc.memoize
 
 # --- EMPTY-sentinel argument shuffling --------------------------------------
 # The runtime accepts a reduced arity via an EMPTY sentinel and reshuffles the
