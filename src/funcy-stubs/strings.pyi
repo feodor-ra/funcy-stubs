@@ -28,30 +28,54 @@ class _SupportsString(Protocol):
     @abstractmethod
     def __str__(self) -> str: ...
 
+@overload
 def re_iter(
-    regex: _RegexType[AnyStr],
+    regex: _RegexType[str],
     s: str,
     flags: _FlagsType = 0,
-) -> Iterable[_MatchType[AnyStr]]: ...
+) -> Iterable[_MatchType[str]]: ...
+@overload
+def re_iter(
+    regex: _RegexType[bytes],
+    s: bytes,
+    flags: _FlagsType = 0,
+) -> Iterable[_MatchType[bytes]]: ...
+@overload
 def re_all(
-    regex: _RegexType[AnyStr],
+    regex: _RegexType[str],
     s: str,
     flags: _FlagsType = 0,
-) -> list[_MatchType[AnyStr]]: ...
+) -> list[_MatchType[str]]: ...
+@overload
+def re_all(
+    regex: _RegexType[bytes],
+    s: bytes,
+    flags: _FlagsType = 0,
+) -> list[_MatchType[bytes]]: ...
+@overload
 def re_find(
-    regex: _RegexType[AnyStr],
+    regex: _RegexType[str],
     s: str,
     flags: _FlagsType = 0,
-) -> _MatchType[AnyStr] | None: ...
-def re_test(regex: _RegexType[AnyStr], s: str, flags: _FlagsType = 0) -> bool: ...
+) -> _MatchType[str] | None: ...
+@overload
+def re_find(
+    regex: _RegexType[bytes],
+    s: bytes,
+    flags: _FlagsType = 0,
+) -> _MatchType[bytes] | None: ...
+@overload
+def re_test(regex: _RegexType[str], s: str, flags: _FlagsType = 0) -> bool: ...
+@overload
+def re_test(regex: _RegexType[bytes], s: bytes, flags: _FlagsType = 0) -> bool: ...
 def re_finder(
     regex: _RegexType[AnyStr],
     flags: _FlagsType = 0,
-) -> Callable[[str], _MatchType[AnyStr] | None]: ...
+) -> Callable[[AnyStr], _MatchType[AnyStr] | None]: ...
 def re_tester(
     regex: _RegexType[AnyStr],
     flags: _FlagsType = 0,
-) -> Callable[[str], bool]: ...
+) -> Callable[[AnyStr], bool]: ...
 @overload
 def str_join(seq: Iterable[_SupportsString | str], /) -> str: ...
 @overload

@@ -110,16 +110,28 @@ def iffy(
 ) -> Callable[[_B], _S | _D]: ...
 @overload
 def iffy(
-    pred: _RegexType[AnyStr],
+    pred: _RegexType[str],
     action: Callable[[str], _S],
     /,
 ) -> Callable[[str], _S | str]: ...
 @overload
 def iffy(
-    pred: _RegexType[AnyStr],
+    pred: _RegexType[bytes],
+    action: Callable[[bytes], _S],
+    /,
+) -> Callable[[bytes], _S | bytes]: ...
+@overload
+def iffy(
+    pred: _RegexType[str],
     action: Callable[[str], _S],
     default: _Default[str, _D],
 ) -> Callable[[str], _S | _D]: ...
+@overload
+def iffy(
+    pred: _RegexType[bytes],
+    action: Callable[[bytes], _S],
+    default: _Default[bytes, _D],
+) -> Callable[[bytes], _S | _D]: ...
 @overload
 def iffy(
     pred: int,
@@ -259,7 +271,7 @@ def ljuxt(*fs: None) -> Callable[[_T], list[_T]]: ...
 @overload
 def ljuxt(
     *fs: _RegexType[AnyStr],
-) -> Callable[[str], list[_MatchType[AnyStr] | None]]: ...
+) -> Callable[[AnyStr], list[_MatchType[AnyStr] | None]]: ...
 @overload
 def ljuxt(*fs: int) -> Callable[[Sequence[_T]], list[_T]]: ...
 @overload
@@ -275,7 +287,7 @@ def juxt(*fs: None) -> Callable[[_T], Iterable[_T]]: ...
 @overload
 def juxt(
     *fs: _RegexType[AnyStr],
-) -> Callable[[str], Iterable[_MatchType[AnyStr] | None]]: ...
+) -> Callable[[AnyStr], Iterable[_MatchType[AnyStr] | None]]: ...
 @overload
 def juxt(*fs: int) -> Callable[[Sequence[_T]], Iterable[_T]]: ...
 @overload
