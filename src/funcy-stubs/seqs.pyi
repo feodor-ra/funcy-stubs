@@ -18,6 +18,7 @@ _S = TypeVar("_S")
 _KT = TypeVar("_KT", bound=Hashable)
 _VT = TypeVar("_VT")
 _H = TypeVar("_H", bound=Hashable)
+_SeqT = TypeVar("_SeqT", bound=Sequence[Any])
 _T_contra = TypeVar("_T_contra", contravariant=True)
 
 _RegexType = TypeAliasType(
@@ -544,13 +545,13 @@ def split(
 ) -> tuple[Iterable[str], Iterable[str]]: ...
 @overload
 def split(
-    pred: int, seq: Iterable[Sequence[_T]]
-) -> tuple[Iterable[_T], Iterable[_T]]: ...
+    pred: int, seq: Iterable[_SeqT]
+) -> tuple[Iterable[_SeqT], Iterable[_SeqT]]: ...
 @overload
 def split(
     pred: slice,
-    seq: Iterable[Sequence[_T]],
-) -> tuple[Iterable[Sequence[_T]], Iterable[Sequence[_T]]]: ...
+    seq: Iterable[_SeqT],
+) -> tuple[Iterable[_SeqT], Iterable[_SeqT]]: ...
 @overload
 def split(
     pred: Mapping[_KT, object],
@@ -576,12 +577,12 @@ def lsplit(
     seq: Iterable[str],
 ) -> tuple[list[str], list[str]]: ...
 @overload
-def lsplit(pred: int, seq: Iterable[Sequence[_T]]) -> tuple[list[_T], list[_T]]: ...
+def lsplit(pred: int, seq: Iterable[_SeqT]) -> tuple[list[_SeqT], list[_SeqT]]: ...
 @overload
 def lsplit(
     pred: slice,
-    seq: Iterable[Sequence[_T]],
-) -> tuple[list[Sequence[_T]], list[Sequence[_T]]]: ...
+    seq: Iterable[_SeqT],
+) -> tuple[list[_SeqT], list[_SeqT]]: ...
 @overload
 def lsplit(
     pred: Mapping[_KT, object], seq: Iterable[_KT]
@@ -605,8 +606,8 @@ def split_by(
 @overload
 def split_by(
     pred: int | slice,
-    seq: Iterable[Sequence[_T]],
-) -> tuple[Iterable[Sequence[_T]], Iterable[Sequence[_T]]]: ...
+    seq: Iterable[_SeqT],
+) -> tuple[Iterable[_SeqT], Iterable[_SeqT]]: ...
 @overload
 def split_by(
     pred: Mapping[_KT, _VT],
@@ -631,8 +632,8 @@ def lsplit_by(
 @overload
 def lsplit_by(
     pred: int | slice,
-    seq: Iterable[Sequence[_T]],
-) -> tuple[list[Sequence[_T]], list[Sequence[_T]]]: ...
+    seq: Iterable[_SeqT],
+) -> tuple[list[_SeqT], list[_SeqT]]: ...
 @overload
 def lsplit_by(
     pred: Mapping[_KT, _VT],
