@@ -5,7 +5,7 @@ from itertools import accumulate, chain, count, cycle, repeat
 from re import Pattern
 from typing import Any, AnyStr, Callable, Hashable, Protocol, TypeVar, overload
 
-from typing_extensions import TypeAliasType
+from typing_extensions import TypeAliasType, TypeGuard
 
 _T = TypeVar("_T")
 _T1 = TypeVar("_T1")
@@ -526,7 +526,12 @@ def distinct(seq: Iterable[_KT], key: Mapping[_KT, _H]) -> Iterable[_KT]: ...
 def distinct(seq: Iterable[_H], key: set[_H]) -> Iterable[_H]: ...
 @overload
 def split(
-    pred: Callable[[_T], bool],
+    pred: Callable[[_T], TypeGuard[_S]],
+    seq: Iterable[_T],
+) -> tuple[Iterable[_S], Iterable[_T]]: ...
+@overload
+def split(
+    pred: Callable[[_T], object],
     seq: Iterable[_T],
 ) -> tuple[Iterable[_T], Iterable[_T]]: ...
 @overload
@@ -547,14 +552,18 @@ def split(
 ) -> tuple[Iterable[Sequence[_T]], Iterable[Sequence[_T]]]: ...
 @overload
 def split(
-    pred: Mapping[_KT, bool],
+    pred: Mapping[_KT, object],
     seq: Iterable[_KT],
 ) -> tuple[Iterable[_KT], Iterable[_KT]]: ...
 @overload
 def split(pred: set[_H], seq: Iterable[_H]) -> tuple[Iterable[_H], Iterable[_H]]: ...
 @overload
 def lsplit(
-    pred: Callable[[_T], bool], seq: Iterable[_T]
+    pred: Callable[[_T], TypeGuard[_S]], seq: Iterable[_T]
+) -> tuple[list[_S], list[_T]]: ...
+@overload
+def lsplit(
+    pred: Callable[[_T], object], seq: Iterable[_T]
 ) -> tuple[list[_T], list[_T]]: ...
 @overload
 def lsplit(pred: None, seq: Iterable[_T]) -> tuple[list[_T], list[_T]]: ...
@@ -572,7 +581,7 @@ def lsplit(
 ) -> tuple[list[Sequence[_T]], list[Sequence[_T]]]: ...
 @overload
 def lsplit(
-    pred: Mapping[_KT, bool], seq: Iterable[_KT]
+    pred: Mapping[_KT, object], seq: Iterable[_KT]
 ) -> tuple[list[_KT], list[_KT]]: ...
 @overload
 def lsplit(pred: set[_H], seq: Iterable[_H]) -> tuple[list[_H], list[_H]]: ...
@@ -580,7 +589,7 @@ def split_at(n: int, seq: Iterable[_T]) -> tuple[Iterable[_T], Iterable[_T]]: ..
 def lsplit_at(n: int, seq: Iterable[_T]) -> tuple[list[_T], list[_T]]: ...
 @overload
 def split_by(
-    pred: Callable[[_T], bool],
+    pred: Callable[[_T], object],
     seq: Iterable[_T],
 ) -> tuple[Iterable[_T], Iterable[_T]]: ...
 @overload
@@ -604,7 +613,7 @@ def split_by(
 def split_by(pred: set[_H], seq: Iterable[_H]) -> tuple[Iterable[_H], Iterable[_H]]: ...
 @overload
 def lsplit_by(
-    pred: Callable[[_T], bool],
+    pred: Callable[[_T], object],
     seq: Iterable[_T],
 ) -> tuple[list[_T], list[_T]]: ...
 @overload
