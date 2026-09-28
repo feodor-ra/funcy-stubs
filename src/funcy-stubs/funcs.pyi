@@ -1,4 +1,5 @@
 from collections.abc import Mapping, Sequence
+from collections.abc import Set as AbstractSet
 from functools import partial, reduce
 from re import Pattern
 from typing import (
@@ -145,13 +146,13 @@ def iffy(
 ) -> Callable[[_KT], _S | _D]: ...
 @overload
 def iffy(
-    pred: set[_H],
+    pred: AbstractSet[_H],
     action: Callable[[_H], _S],
     /,
 ) -> Callable[[_H], _S | _H]: ...
 @overload
 def iffy(
-    pred: set[_H],
+    pred: AbstractSet[_H],
     action: Callable[[_H], _S],
     default: _Default[_H, _D],
 ) -> Callable[[_H], _S | _D]: ...
@@ -266,7 +267,7 @@ def ljuxt(*fs: slice) -> Callable[[Sequence[_T]], list[Sequence[_T]]]: ...
 @overload
 def ljuxt(*fs: Mapping[_KT, _VT]) -> Callable[[_KT], list[_VT]]: ...
 @overload
-def ljuxt(*fs: set[_H]) -> Callable[[_H], list[bool]]: ...
+def ljuxt(*fs: AbstractSet[_H]) -> Callable[[_H], list[bool]]: ...
 @overload
 def juxt(*fs: Callable[_P, _T]) -> Callable[_P, Iterable[_T]]: ...
 @overload
@@ -282,7 +283,7 @@ def juxt(*fs: slice) -> Callable[[Sequence[_T]], Iterable[Sequence[_T]]]: ...
 @overload
 def juxt(*fs: Mapping[_KT, _VT]) -> Callable[[_KT], Iterable[_VT]]: ...
 @overload
-def juxt(*fs: set[_H]) -> Callable[[_H], Iterable[bool]]: ...
+def juxt(*fs: AbstractSet[_H]) -> Callable[[_H], Iterable[bool]]: ...
 
 __all__ = [
     "autocurry",
